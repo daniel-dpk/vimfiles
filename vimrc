@@ -94,7 +94,11 @@ endif
 
 
 " Excluding files when matching
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.o,*.obj,*.exe,*.so,*.dll,*.pyc,*.pyo,*.pyd,*.lnk,*.pdf,*~,*/temp/*,*/publish/*,*/dist/*,*/external_libs/*,*/debug*/*,*/release*/*,*/Doxygen/*,tags
+set wildignore+=tags,*~,*/.*/*,*/.hg/*,*/.svn/*
+set wildignore+=*.o,*.obj,*.exe,*.so,*.dll,*.pyc,*.pyo,*.pyd
+set wildignore+=*.lnk,*.pdf
+set wildignore+=*/temp/*,*/publish/*,*/dist/*,*/external_libs/*
+set wildignore+=*/debug*/*,*/release*/*,*/Doxygen/*
 
 
 " Hide buffers even when they have changed (think twice before doing :q!)
