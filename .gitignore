@@ -1,0 +1,15 @@
+# Ignore temporary folders/files
+/sessions/
+.netrwhist
+tags
+*~
+*.swp
+
+# Ignore dictionaries
+*.spl
+*.sug
+
+# OS files
+Thumbs.db
+.DS_Store
+*.lnk
