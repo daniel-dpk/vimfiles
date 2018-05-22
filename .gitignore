@@ -1,3 +1,6 @@
+# Ignore custom user settings
+/custom_settings.vim
+
 # Ignore temporary folders/files
 /sessions/
 .netrwhist

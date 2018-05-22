@@ -1,0 +1,211 @@
+extends c
+
+priority 1
+
+
+snippet #! "New script header (w/ copyright notice)" b
+//----------------------------------------------------------------------------
+// Copyright (c) `!p
+import datetime
+snip.rv = datetime.date.today().year`, ${1:`!v g:snips_author`}
+//----------------------------------------------------------------------------
+//
+//
+//----------------------------------------------------------------------------
+//  `!p snip.rv = snip.fn`
+//
+//  Author:         ${2:`!v g:snips_author`}
+//                  ${3:`!v g:snips_email`}
+//
+//  Description:
+//      ${7:TODO: Describe $4}
+//----------------------------------------------------------------------------
+
+////////////////////////////////
+// $4 <
+////////////////////////////////
+global proc ${5:/* return */} ${4:`!p snip.rv = snip.basename`}(${6:/* params */}) {
+	${8:// code...}
+}
+endsnippet
+
+
+snippet p "Print debug message" b
+print (">>> $1 <<<\n");
+endsnippet
+
+
+snippet pv "Print variable value" b
+print (">>> $1 = " + $${1:var} + " <<<\n");
+endsnippet
+
+
+snippet for "for loop" !b
+for ($${3:i} = 0; $$3 < ${1:size($${2})}; $$3++) {
+	${VISUAL}${4}
+}
+endsnippet
+
+snippet fore "foreach loop: for (i in arr) {...}" !b
+${3:string} $$2;
+for ($${2:item} in $${1:array}) {
+	${VISUAL}${4}
+}
+endsnippet
+
+
+snippet if "if (...) {code...}" !b
+if (${1}) {
+	${VISUAL}${2}
+}
+endsnippet
+
+snippet else "else" !
+else {
+	${VISUAL}${1}
+}
+endsnippet
+
+snippet ife "if else" !
+if (${1}) {
+	${VISUAL}${2}
+} else {
+	${3}
+}
+endsnippet
+
+
+snippet switch "switch (...) {code...}" b
+switch (${1:$which}) {
+	case ${2:1}:
+		${3:${VISUAL:\/\/ code...}}
+		break;
+	default:$4
+		break;
+}
+endsnippet
+
+
+snippet case "another case in a switch()" b
+case ${1:val}:
+	${2:${VISUAL:\/\/ code...}}
+	break;
+endsnippet
+
+
+snippet prompt "Prompt Dialog with OK and Cancel buttons" b
+string $result = \`promptDialog
+	-t  "${1:Title}"
+	-m  "${2:Message}"
+	${3:-tx "${4:editable text}"}
+	-b  "OK"
+	-b  "Cancel"
+	-db "OK"
+	-p  ${5:\$parentWin}
+\`;
+if ("OK" != $result) {
+	${6:return;}
+}
+string \$${7:choice} = `promptDialog -q -tx`;
+endsnippet
+
+
+snippet prompt "Confirm Dialog with OK and Cancel buttons" b
+string $result = \`confirmDialog
+	-t  "${1:Title}"
+	-m  "${2:Message}"
+	-b  "OK"
+	-b  "Cancel"
+	-db "OK"
+	-p  ${3:\$parentWin}
+\`;
+if ("OK" != $result) {
+	${6:return;}
+}
+endsnippet
+
+
+snippet ok "Confirm Dialog with an OK button" b
+confirmDialog
+	-t  "${1:Title}"
+	-m  "${2:Message}"
+	-b  "OK"
+	-db "OK"
+	-p  ${3:\$parentWin};
+endsnippet
+
+
+snippet loc "local proc" !b
+//------------------------------
+// _$1 <
+//------------------------------
+proc ${3:/* return */} _${1:procName}(${2:/* params */}) {
+	${4:${VISUAL:\/\/ code...}}
+}
+endsnippet
+
+
+snippet glob "global proc" !b
+////////////////////////////////
+// $1 <
+//
+// ${4:TODO: Describe $1}
+////////////////////////////////
+global proc ${3:/* return */} ${1:`!p snip.rv = snip.basename`_}(${2:/* params */}) {
+	${5:${VISUAL:\/\/ code...}}
+}
+endsnippet
+
+
+snippet Doc "Documentation for a global proc" b
+////////////////////////////////
+// ${1:procedureName} <
+//
+// ${2:Description}
+////////////////////////////////
+endsnippet
+
+
+snippet doc "Documentation for a local proc" b
+//------------------------------
+// ${1:procedureName} <
+//
+// ${2:Description}
+//------------------------------
+endsnippet
+
+
+snippet end "End marker for procedure" b
+//---- end "$1" ----// }}}2
+endsnippet
+
+
+snippet loco "old local proc (w/ much decoration)" b
+//------------------------------
+// $1 {{{2
+//------------------------------
+proc ${3:int} ${1:_name}($2) {
+	${4:${VISUAL:\/\/ code...}}
+}
+//---- end "$1" ----// }}}2
+endsnippet
+
+
+snippet globo "old global proc (w/ much decoration)" b
+////////////////////////////////
+// $1 {{{2
+////////////////////////////////
+global proc${3: int} ${1:`!p snip.rv = snip.basename`_}(${2:args}) {
+	${4:${VISUAL:\/\/ code...}}
+}
+//---- end "$1" ----// }}}2
+endsnippet
+
+
+snippet catch "Try-Catch construct" !b
+if (catch(${1:${VISUAL:dangerousCall()}})) {
+	${2:// Failure}
+} else {
+	${3:// Success}
+}
+endsnippet

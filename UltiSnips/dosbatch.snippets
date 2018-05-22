@@ -1,0 +1,115 @@
+global !p
+def myBox(twidth, border="#", filler=None, minWidth=0):
+    if filler is None:
+        filler = border
+    innerWidth = max(twidth+4, minWidth-2*len(border))
+    hrule = filler * (innerWidth // len(filler))
+    if len(hrule) < twidth+4:
+        hrule += filler
+    hrule = border + hrule + border
+    prefix = border + " " * ((innerWidth-twidth) // 2)
+    suffix = " " * (len(hrule) - len(prefix) - twidth - len(border)) + border
+    return hrule, prefix, suffix, hrule
+endglobal
+
+snippet #! "Init a new batch file" b
+@echo off
+:: One of these:
+setlocal
+::setlocal ENABLEDELAYEDEXPANSION
+
+
+:: vim:set et sts=4:
+endsnippet
+
+
+snippet fun "Function-like structure" b
+call :$1 args here
+if ERRORLEVEL 1 GOTO :error
+
+`!p
+box = myBox(len(t[1]), "::", ":")
+snip.rv = box[0]
+snip += box[1] + t[1] + box[2]
+snip += box[3]
+`
+:${1:function_name}
+exit /B
+endsnippet
+
+
+snippet if "if condition ()" b
+if "%${1:variable}%"=="${2:value}" (
+	${3:${VISUAL}}
+)
+endsnippet
+
+
+snippet args "Argument parsing" b
+:: This might be good to place at the top of the script.
+goto :usage_end
+:usage
+	echo Usage: %~nx0 [/?] [OPTIONS]
+	echo.
+	echo        Description...
+	echo.
+	echo        EXAMPLES:
+	echo            %~nx0 /?
+	echo.
+exit /B
+:usage_end
+
+set foo=0
+call :parseargs %*
+if "%doExit%"=="1" goto :END
+
+
+::::::::::::::::
+:: Main Logic ::
+::::::::::::::::
+
+echo foo = %foo%
+
+
+:END
+pause
+exit /B %ERRORLEVEL%
+
+:error
+pause
+exit /B 1
+
+
+:parseargs
+	if           "%~1"==""      ( exit /B
+	) else if    "%~1"=="/?"    ( (set doExit=1) & goto :usage
+	) else if    "%~1"=="-h"    ( (set doExit=1) & goto :usage
+	) else if    "%~1"=="-help" ( (set doExit=1) & goto :usage
+	) else if /I "%~1"=="FOO"   ( set foo=1
+	) else (
+		echo ERROR: Unknown argument: %1
+		set doExit=1
+		call :usage
+		exit /B 1
+	)
+	shift
+	goto :parseargs
+exit /B
+endsnippet
+
+
+snippet for "for %%f in (%files%)" b
+for %%${1:f} in (%${2:files}%) do (
+	$3
+)
+endsnippet
+
+
+snippet prompt "Prompt for user input" b
+set /p ${1:variable}="${2:Prompt: }"
+endsnippet
+
+
+snippet sleep "hack to simulate sleep" b
+ping 127.0.0.1 -n ${1:10} > nul
+endsnippet

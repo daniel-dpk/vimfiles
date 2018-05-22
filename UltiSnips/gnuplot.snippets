@@ -1,0 +1,44 @@
+snippet #! "Gnuplot template for simple plot" b
+if (!exists("dataFile")) dataFile = 'data.txt'
+if (!exists("PNG_OUTPUT")) PNG_OUTPUT = 'plot.png'
+potPNGw = '1280'
+potPNGh = '800'
+set macro
+if (PNG_OUTPUT ne '') {
+	set terminal pngcairo enhanced font "arial,12" fontscale 1.5 size @potPNGw,@potPNGh
+	set output PNG_OUTPUT
+}
+
+#do for [i=1:9] {
+#	set style line i lw 2.0
+#}
+#set style line 6 linecolor rgb "#009900"
+
+set style line 12 linecolor rgb "#bbbbbb" lt 1 lw 1.0
+set style line 13 linecolor rgb "#dddddd" lt 1 lw 1.0
+set grid xtics mxtics nox2tics ytics mytics noy2tics back linestyle 12, linestyle 13
+
+#set mxtics 4
+#set mytics 4
+
+#set key samplen 2 spacing .8 font ",8"
+#set key width -25
+set ylabel "y Axis" offset 0,0
+set xlabel "x Axis" offset 0,0
+
+#set logscale x
+#set xrange [:500]
+
+plot dataFile with lines title "Some Data"
+
+#plot 10 title "line at value 10" with lines ls 0, \
+#	dataFile i 0 with lines title "foo", \
+#	dataFile i 1 with lines title "bar"
+
+#plot \
+#	for [i=0:1] dataFile index i using 1:2 with lines lt (i+1) lw 2.0 title columnheader, \
+#	for [i=0:1] dataFile index i using 1:2 with points pt 5 lc (i+1) ps 1.0 notitle
+
+
+# vim:set nowrap:
+endsnippet

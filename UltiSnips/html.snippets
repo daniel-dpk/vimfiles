@@ -1,0 +1,18 @@
+snippet video "Insert video" b
+<video autoplay="${2:true}" preload="auto" loop="${3:true}" poster="$1.jpg">
+	<source src="${1:video}.webm" type='video/webm' />
+	<source src="$1.ogg" type='video/ogg' />
+	<source src="$1.mp4" type='video/mp4' />
+	Your browser does not support the video tag.<br />
+	You may download the video at: <a href="$1.mp4">$1.mp4</a>
+</video>
+endsnippet
+
+
+snippet tag "General <tag></tag>" w
+<${1:sometag}>$2</$1>
+endsnippet
+
+snippet tag. "General <tag class=...></tag>" w
+<${1:sometag}`!p snip.rv=' class="' if t[2] else ""`${2:name}`!p snip.rv='"' if t[2] else ""`>$3</$1>
+endsnippet

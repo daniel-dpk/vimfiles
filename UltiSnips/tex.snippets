@@ -1,0 +1,327 @@
+global !p
+
+
+def get_from_line_above(pattern, default='', full_output=False):
+	import re
+	import vim
+	line = vim.current.range.start
+	buf = vim.current.buffer
+	def _is_defining_line(i):
+		return True if re.search(pattern, buf[i]) else False
+	key_line = next((i for i in xrange(line-1, -1, -1) if _is_defining_line(i)),
+					None)
+	if key_line is not None:
+		m = re.search(pattern, buf[key_line])
+		if m:
+			return (m.group(1), key_line) if full_output else m.group(1)
+	return (default, None) if full_output else default
+
+endglobal
+
+
+snippet todo "\TODO{...}" w
+\TODO{${1:Task}}
+endsnippet
+
+
+snippet newenv "Define a new environment" b
+\newenvironment{${1:EnvName}}{%
+	${2:opening}
+}{%
+	${3:closing}
+}
+endsnippet
+
+
+snippet lu "LU: New LU (Learning Unit)" !b
+% LU: ${1:LU Name}
+\begin{minipage}{2.6in}
+\begin{center}{\bf ${2:${VISUAL:Title}}}\end{center}\medskip
+${3:$1}
+\end{minipage}
+
+\begin{minipage}{2.6in}
+${4:Correct Answer}
+\end{minipage}
+endsnippet
+
+
+snippet h "LU: Heading line" !b
+\begin{center}{\bf ${1:${VISUAL:Title}}}\end{center}\medskip
+endsnippet
+
+snippet f "LU: Framed formula" !b
+\begin{empheq}{align*}
+	${1:${VISUAL:formula}}
+\end{empheq}
+endsnippet
+
+snippet a "\begin{align*} ... \end{align*}" b
+\begin{align*}
+	${1:${VISUAL:formula}}
+\end{align*}
+endsnippet
+
+snippet m "\begin{multline*} ... \end{multline*}" b
+\begin{multline*}
+	${1:${VISUAL:formula}}
+\end{multline*}
+endsnippet
+
+snippet t "\\text{...}" !w
+\text{${1:${VISUAL:...}}}
+endsnippet
+
+
+snippet en "enumerate block" b
+\begin{enumerate}
+	\item ${1:${VISUAL}}
+\end{enumerate}
+endsnippet
+
+
+snippet item "itemize block" b
+\begin{itemize}${1:[noitemsep]}
+	\item ${2:${VISUAL}}
+\end{itemize}
+endsnippet
+
+
+snippet i "\\item" b
+\item $0
+endsnippet
+
+
+snippet big( "big( ... big)" !w
+\big( ${1:${VISUAL}} \big)
+endsnippet
+
+snippet big[ "big[ ... big]" !w
+\big[ ${1:${VISUAL}} \big]
+endsnippet
+
+snippet big{ "big{ ... big}" !w
+\big\\{ ${1:${VISUAL}} \big\\}
+endsnippet
+
+
+snippet Big( "Big( ... Big)" !w
+\Big( ${1:${VISUAL}} \Big)
+endsnippet
+
+snippet Big[ "Big[ ... Big]" !w
+\Big[ ${1:${VISUAL}} \Big]
+endsnippet
+
+snippet Big{ "Big{ ... Big}" !w
+\Big\\{ ${1:${VISUAL}} \Big\\}
+endsnippet
+
+
+snippet fr "Fraction" w
+\frac{${1:${VISUAL:nom}}}{${2:denom}}
+endsnippet
+
+snippet tfr "Text fraction (\tfrac{...}{...})" w
+\tfrac{${1:${VISUAL:nom}}}{${2:denom}}
+endsnippet
+
+snippet oo "\infty" w
+\infty
+endsnippet
+
+
+snippet fp "figPut - Fancy figure with caption" b
+\figPut${1:[tbh]}{\includegraphics[width=${2:.4\linewidth}]{${3:image}}}{${4:${VISUAL:The caption.}}}{${5:figname}}
+endsnippet
+
+
+snippet fpr "figPutRows - Fancy multi-figure with caption" b
+\figPutRows[${1:tbp}]{%
+	\figII[~]
+		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${3:img1}}}{}%
+		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${4:img2}}}{}
+
+	\vspace*{2ex}
+	\figII[~]
+		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${5:img3}}}{}%
+		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${6:img4}}}{}%
+}{%
+	${7:The caption.}
+}{fig:${2:TODO}}
+endsnippet
+
+
+snippet if "if... then... else..." b
+\ifthenelse{${1:\equal{${2:\foo}}{${3:bar}}}}{%
+	${4:${VISUAL:ifyes}}
+}{${5:
+	ifno
+}}
+endsnippet
+
+
+snippet sref "\secref{sec:...} -> section 4.3" w
+\secref{sec:$1}$0
+endsnippet
+
+
+snippet eref "\eqref{eq:...} -> (2.1)" w
+\eqref{eq:$1}$0
+endsnippet
+
+
+snippet enref "\eqnref{eq:...} -> equation (2.1)" w
+\eqnref{eq:$1}$0
+endsnippet
+
+
+snippet fref "\figref{fig:...} -> figure 2.1" w
+\figref{fig:$1}$0
+endsnippet
+
+
+snippet tref "\tabref{tab:...} -> table 2.1" w
+\tabref{tab:$1}$0
+endsnippet
+
+
+snippet cite "\autocite[]{}" w
+\\${1:auto}cite${3:[]}{$2}$0
+endsnippet
+
+
+snippet l "\label{}" w
+\label{$1}$0
+endsnippet
+
+
+###############################
+#  Tweaking default Snippets  #
+###############################
+
+snippet table "Table environment" b
+\begin{table}[${1:htpb}]
+	\centering
+	\caption{%
+		${2:caption}
+	}
+	\label{tab:${3:label}}
+	\begin{${4:t}${4/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}{${5:c}}
+	\toprule
+		$6${5/((?<=.)c|l|r)|./(?1: & )/g}
+	\\\\\midrule
+		$0${5/((?<=.)c|l|r)|./(?1: & )/g}
+	\bottomrule
+	\end{$4${4/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}
+\end{table}
+endsnippet
+
+
+#snippet b "\\begin{} ... \\end{} block" !b
+#\begin{${1:block_type}}${2:[${3:options}]}
+#${4:$VISUAL}
+#\end{$1}
+#endsnippet
+
+snippet "b(egin)?" "begin{} / end{}" !br
+\begin{${1:something}}${2:[${3:options}]}
+	${0:${VISUAL}}
+\end{$1}
+endsnippet
+
+
+snippet eq "Equation" b
+\begin{equation}\label{eq:${1:name}}
+	${2:${VISUAL}}
+\end{equation}
+endsnippet
+
+snippet eq* "Equation without number" b
+\begin{equation*}
+	${1:${VISUAL}}
+\end{equation*}
+endsnippet
+
+snippet subeq "subequations" b
+\begin{subequations}\label{eq:${1:TODO}}
+	\begin{align}
+		\label{eq:$1_${2:TODO}}
+		${3:${VISUAL}}
+	\end{align}
+\end{subequations}
+endsnippet
+
+snippet ali "\begin{align(ed)}" b
+\begin{align${1:ed}}`!p
+if snip.c in ("", "\\label{eq:"):
+	if not t[1]:
+		snip.rv = "\\label{eq:"
+	else:
+		snip.rv = ""
+else:
+	snip.rv = snip.c
+`$2`!p
+if snip.c in ("", "}"):
+	if not t[1]:
+		snip.rv = "}"
+	else:
+		snip.rv = ""
+else:
+	snip.rv = snip.c
+`
+	${3:${VISUAL}}
+\end{align$1}
+endsnippet
+
+
+snippet cha "Chapter" b
+\chapter{${1:${VISUAL:Chapter Name}}}
+endsnippet
+
+
+snippet sec "Section" b
+\section{${1:${VISUAL:Section Name}}}
+endsnippet
+#\label{sec:${2:`!p
+#import re
+#snip.rv = re.sub('[^0-9a-zA-Z]+', '', ''.join(w[0].upper() + w[1:] for w in t[1].split()))
+#`}}
+#
+#${0}
+
+snippet sub "Subsection" b
+\subsection{${1:${VISUAL:Subsection Name}}}
+endsnippet
+#\label{sub:${2:`!p
+#import re
+#snip.rv = re.sub('[^0-9a-zA-Z]+', '', ''.join(w[0].upper() + w[1:] for w in t[1].split()))
+#`}}
+#
+#${0}
+
+snippet ssub "Subsubsection" b
+\subsubsection{${1:${VISUAL:Subsubsection Name}}}
+endsnippet
+#\label{ssub:${2:`!p
+#import re
+#snip.rv = re.sub('[^0-9a-zA-Z]+', '', ''.join(w[0].upper() + w[1:] for w in t[1].split()))
+#`}}
+#
+#${0}
+
+
+snippet frame "beamer frame block" b
+\begin{frame}
+	\frametitle{${1:`!p
+if not snip.c:
+	snip.rv = get_from_line_above(r"\\(?:frametitle|subsection|section)\{(.+)\}", "title")
+else:
+	snip.rv = snip.c`}}
+	${2:${VISUAL:content}}
+\end{frame}
+endsnippet
+
+snippet inc "\includegraphics{...}" b
+\includegraphics{${1:imagefile}}
+endsnippet

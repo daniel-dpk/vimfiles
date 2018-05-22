@@ -1,0 +1,89 @@
+snippet #! "init new script" b
+#!/bin/bash
+
+# Stop upon any errors encountered.
+set -o errexit
+endsnippet
+
+snippet args "argument parsing" b
+# Default values for options
+${1:opt1}="${2:def1}"
+${4:opt2}="${5:def2}"
+
+
+#===============================
+usage() {
+	cat <<EOF
+	Usage: \`basename \$0\` [OPTIONS]
+
+		${7:Description of script.}
+
+
+	OPTIONS:
+	 -${3:a} string  Description of flag -$3. Default: $2
+	 -${6:b} string  Description of flag -$6. Default: $5
+
+	 -h         Show this message
+
+
+	EXAMPLES:
+		\`basename \$0\` -$3 value
+EOF
+}
+#===============================
+
+
+#===============================
+# Read the options given on the command line.
+# The string after getopts specifies expected args, like:
+#   abc    - allows flags -a -b -c
+#   ab:c   - allows flags -a -b ARGUMENT -c
+#   a:b:   - allows flags -a ARG1 -b ARG2
+#===============================
+while getopts "h$3:$6:" OPTION; do
+	case \$OPTION in
+		h)
+			usage
+			exit 0
+			;;
+		$3)
+			$1=\$OPTARG
+			if [ "\$$1" == "" ]; then
+				echo "ERROR: Empty string not a valid argument for '-$3'"
+				echo ""
+				usage
+				exit 1
+			fi
+			;;
+		$6)
+			$4=\$OPTARG
+			;;
+		?)
+			usage
+			exit 1
+			;;
+	esac
+done
+#===============================
+# This removes all recognized options from the \$* variables.
+shift \$(($OPTIND - 1))
+if [ \$# -gt 0 ]; then
+	echo "ERROR: trailing arguments to \`basename \$0\`: '\$@'"
+	usage
+	exit 1
+fi
+#===============================
+endsnippet
+
+
+snippet if "if [ ]" b
+if [ ${1:-f "file"} ]; then
+	${2:${VISUAL:# ...}}
+fi
+endsnippet
+
+snippet if "if [[ ]]" b
+if [[ ${1:condition} ]]; then
+	${2:${VISUAL:# ...}}
+fi
+endsnippet

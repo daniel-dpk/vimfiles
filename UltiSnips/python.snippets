@@ -1,0 +1,580 @@
+#=========================================================================#
+#              Python Functions Copied from Shipped Snippets              #
+#=========================================================================#
+# I wanted to tweak the shipped snippets a little. Since they're using python
+# functions defined (and accessible) only inside their own .snippets file,
+# these have to be copied over in order for copied snippets to work.
+# Note that the functions are unchanged, so if any get updated in the shipped
+# file, they can be copied over again and only the snippets might need
+# adjustments.
+
+##########
+# COMMON #
+##########
+
+# The smart def and smart class snippets use a global option called
+# "g:ultisnips_python_style" which, if set to "doxygen" will use doxygen
+# style comments in docstrings.
+
+global !p
+
+NORMAL  = 0x1
+DOXYGEN = 0x2
+SPHINX  = 0x3
+
+SINGLE_QUOTES = 0x1
+DOUBLE_QUOTES = 0x2
+
+def get_args(arglist):
+	args = [arg.split('=')[0].strip() for arg in arglist.split(',') if arg]
+	args = [arg for arg in args if arg and arg != "self"]
+
+	return args
+
+
+def get_quoting_style(snip):
+	style = snip.opt("g:ultisnips_python_quoting_style", "double")
+	if style == 'single':
+		return SINGLE_QUOTES
+	return DOUBLE_QUOTES
+
+def tripple_quotes(snip):
+	if get_quoting_style(snip) == SINGLE_QUOTES:
+		return "'''"
+	return '"""'
+
+def get_style(snip):
+	style = snip.opt("g:ultisnips_python_style", "normal")
+
+	if    style == "doxygen": return DOXYGEN
+	elif  style == "sphinx": return SPHINX
+	else: return NORMAL
+
+
+def format_arg(arg, style):
+	if style == DOXYGEN:
+		return "@param %s @todo" % arg
+	elif style == SPHINX:
+		return ":param %s: @todo" % arg
+	elif style == NORMAL:
+		return ":%s: @todo" % arg
+
+
+def format_return(style):
+	if style == DOXYGEN:
+		return "@return: @todo"
+	elif style in (NORMAL, SPHINX):
+		return ":returns: @todo"
+
+
+def write_docstring_args(args, snip):
+	if not args:
+		snip.rv += '{0}'.format(tripple_quotes(snip))
+		return
+
+	snip.rv += '\n' + snip.mkline('', indent='')
+
+	style = get_style(snip)
+
+	for arg in args:
+		snip += format_arg(arg, style)
+
+
+def write_init_body(args, parents, snip):
+	parents = [p.strip() for p in parents.split(",")]
+	parents = [p for p in parents if p != 'object']
+
+	for p in parents:
+		snip += p + ".__init__(self)"
+
+	if parents:
+		snip.rv += '\n' + snip.mkline('', indent='')
+
+	for arg in args:
+		snip += "self._%s = %s" % (arg, arg)
+
+
+def write_slots_args(args, snip):
+	args = ['"_%s"' % arg for arg in args]
+	snip += '__slots__ = (%s,)' % ', '.join(args)
+
+def is_defining_line(keyword, line, indent):
+	import re
+	if not re.match(r'\s*%s\s' % keyword, line):
+		return False
+	line_indent = re.match(r'\s*', line).group(0)
+	if len(line_indent) < len(indent):
+		return True
+
+def get_defined_name(kind, current_indent, default=None, full_output=False):
+	import re
+	import vim
+	line = vim.current.range.start
+	buf = vim.current.buffer
+	key_line = next((i for i in xrange(line-1, -1, -1)
+					if is_defining_line(kind, buf[i], current_indent)), None)
+	if key_line is not None:
+		m = re.search(r'%s\s+(\w+)' % kind, buf[key_line])
+		if m:
+			return (m.group(1), key_line) if full_output else m.group(1)
+	return (default, None) if full_output else default
+
+def get_class(snip, default='MyClass', full_output=False):
+	return get_defined_name('class', snip.indent, default, full_output)
+
+def get_method(snip, default='method', full_output=False):
+	return get_defined_name('def', snip.indent, default, full_output)
+
+endglobal
+
+
+#=========================================================================#
+#                        Tweaking Shipped Snippets                        #
+#=========================================================================#
+# These are copied from the shipped python.snippets file and tweaked a little.
+# I'll make sure to commit once after copying, so that tweaks are clearly
+# visible in the history of my Vimfiles repo.
+
+snippet class "class without docstrings" b
+class ${1:MyClass}(${2:object}):
+	def __init__(self$3):
+		`!p
+args = get_args(t[3])
+if t[2] != 'object':
+	snip.rv = 'super(%s, self).__init__(%s)' % (t[1], ", ".join(args))
+else:
+	snip.rv = "pass"
+`
+endsnippet
+
+
+snippet classdoc "class with docstrings" b
+class ${1:MyClass}(${2:object}):
+	`!p snip.rv = tripple_quotes(snip)`${3:TODO: Docstring for $1.}`!p snip.rv = tripple_quotes(snip)`
+
+	def __init__(self$4):
+		`!p snip.rv = tripple_quotes(snip)`${5:TODO: Describe $1.__init__()}`!p
+snip.rv = ""
+snip >> 2
+
+args = get_args(t[4])
+
+write_docstring_args(args, snip)
+if args:
+	#snip.rv += '\n' + snip.mkline('', indent='')
+	snip += '{0}'.format(tripple_quotes(snip))
+
+write_init_body(args, t[2], snip)
+`
+		pass$0
+endsnippet
+
+
+snippet slotclass "class with slots and docstrings" b
+class ${1:MyClass}(${2:object}):
+	`!p snip.rv = tripple_quotes(snip)`${3:Docstring for $1. }`!p snip.rv = tripple_quotes(snip)`
+`!p
+snip >> 1
+args = get_args(t[4])
+write_slots_args(args, snip)
+`
+
+	def __init__(self$4):
+		`!p snip.rv = tripple_quotes(snip)`${5:@todo: to be defined.}`!p
+snip.rv = ""
+snip >> 2
+
+args = get_args(t[4])
+
+write_docstring_args(args, snip)
+if args:
+	#snip.rv += '\n' + snip.mkline('', indent='')
+	snip += tripple_quotes(snip)
+
+write_init_body(args, t[2], snip)
+`
+		$0
+endsnippet
+
+
+snippet akw "*args, **kwargs" w
+*args, **kwargs
+endsnippet
+
+
+snippet testcase "pyunit testcase" b
+class Test${1:Class}(${2:unittest.TestCase}):
+	def test_${3:name}(self):
+		${4:pass}
+endsnippet
+
+
+snippet test "Test function" b
+def test_${1:name}(self):
+	${2:${VISUAL:pass}}
+endsnippet
+
+
+snippet ae "Assert equal" b
+self.assertEqual(${1:first}, ${2:second})
+endsnippet
+
+snippet ane "Assert not equal" b
+self.assertNotEqual(${1:first}, ${2:second})
+endsnippet
+
+
+snippet aae "Assert almost equal" b
+self.assertAlmostEqual(${1:first}, ${2:second})
+endsnippet
+
+snippet ar "Assert raises" b
+with self.assertRaises(${1:Runtime}Error):
+	${2:${VISUAL:pass}}
+endsnippet
+
+
+#=========================================================================#
+#                             My Own Snippets                             #
+#=========================================================================#
+
+snippet future "from __future__ import stuff..." b
+from __future__ import print_function, division
+endsnippet
+
+snippet rwprop "Read/Write Property" b
+@property
+def ${1:my_prop}(self):
+	return self.${2:_$1}
+@$1.setter
+def $1(self, value):
+	self.$2 = value
+endsnippet
+
+snippet lprop "Lazy Read-only Property" b
+@property
+def ${1:my_prop}(self):
+	if self.${2:_$1} is None:
+		self.$2 = self.${3:_compute_$1}
+	return self.$2
+endsnippet
+
+snippet lwprop "Lazy Read/Write Property" b
+@property
+def ${1:my_prop}(self):
+	if self.${2:_$1} is None:
+		self.$2 = self.${3:_compute_$1}
+	return self.$2
+@$1.setter
+def $1(self, value):
+	self.$2 = value
+endsnippet
+
+
+snippet def "Function without docstring" b
+def ${1:function}(`!p
+if snip.indent:
+	snip.rv = 'self' + (", " if len(t[2]) else "")`${2:arg1}):
+	${3:${VISUAL:pass}}
+endsnippet
+
+
+snippet defc "Class method without docstring" b
+@classmethod
+def ${1:function}(cls, ${2:arg1}):
+	${3:${VISUAL:pass}}
+endsnippet
+
+
+snippet defs "Static method without docstring" b
+@staticmethod
+def ${1:function}(${2:arg1}):
+	${3:${VISUAL:pass}}
+endsnippet
+
+
+snippet doc "Oneline (short) documentation string" b
+"""${1:Documentation}"""
+endsnippet
+
+snippet Doc "Documentation string with heading and body" bm
+r"""${1:Brief description.}
+
+${2:Long description.}
+
+"""
+endsnippet
+
+snippet DOC "Numpy-Style documentation" bm
+r"""${1:TODO: One-line summary.}
+
+${2:TODO: Description.}
+
+Parameters
+----------
+${3:var1 : int}
+	${4:TODO: Description of \`var1\`.}
+
+Returns
+-------
+${5:type}
+	${6:TODO: Explanation of return value of type \`\`type\`\`.}
+
+Notes
+-----
+${7:TODO: Some notes about the implementation (if needed).}
+
+"""
+endsnippet
+
+
+snippet /^all/ "__all__ variable definition" r
+__all__ = [
+	"${1:exported_function}",
+]
+endsnippet
+
+
+snippet = "self._x = x" b
+self._$1 = ${1:x}
+endsnippet
+
+
+snippet _ "x = self._x" b
+${1:x} = self._$1
+endsnippet
+
+
+snippet /((?<=\S\s)|(?<=[\(\[\{=\,]))_/ "self._x" r
+self._${1:x}
+endsnippet
+
+
+snippet p "Print debug message >>> inside brackets <<<" b
+print ">>> ${1:Message} <<<"
+endsnippet
+
+snippet pv "Print variable in debug message >>> inside brackets <<<" b
+print ">>> ${1:variable} = %s <<<" % (${2:$1})
+endsnippet
+
+snippet pp "Pretty Print init" b
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint(${1:stuff})
+endsnippet
+
+
+snippet raise "Raise an exception" b
+raise ${1:Runtime}Error("${2:Message}")
+endsnippet
+
+
+snippet bases "Print all base classes of an object" b
+import inspect
+print "Bases:\n  " + "\n  ".join(repr(c) for c in inspect.getmro(${1:obj}.__class__))
+endsnippet
+
+
+snippet bp "Set an IPython breakpoint" b
+from IPython.core.debugger import Tracer; Tracer()()
+endsnippet
+
+
+snippet unittest "Unit test file template" b
+#!/usr/bin/env python
+
+import unittest
+import sys
+
+from .${1:`!p
+if not snip.c:
+	import string
+	snip.rv = re.sub(r'^test(m)?_', '', snip.basename)
+else:
+	snip.rv = snip.c
+`} import ${2:SomeClass}
+
+
+class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:unittest.TestCase}):
+	def setUp(self):
+		pass
+	def tearDown(self):
+		pass
+
+	def test_${5:`!p snip.rv = t[2].lower()`}(self):
+		self.assertEqual(1, 0) # ... should fail
+
+
+def run_tests():
+	suite = unittest.TestLoader().loadTestsFromModule(sys.modules[__name__])
+	return len(unittest.TextTestRunner(verbosity=2).run(suite).failures)
+
+
+if __name__ == '__main__':
+	unittest.main()
+endsnippet
+
+
+snippet flag "Add a flag to the ArgumentParser" b
+parser.add_argument("-${1:f}", "--${2:flag}", ${3:action="store_true"},
+					help="${4:Description of this flag.}")
+endsnippet
+
+
+snippet script "Complete script skeleton with argument handling etc." b
+#!/usr/bin/env python
+
+import sys
+import os
+import os.path as op
+
+# Logging for this module
+import logging
+class NullHandler(logging.Handler): # to support Python < 2.7
+	def emit(self, record): pass
+logger = logging.getLogger(op.splitext(op.basename(__file__))[0])
+logger.addHandler(NullHandler())
+
+# Old Pythons don't have argparse. Download and put argparse.py into path/to/argparse/.
+if sys.version_info < (2, 7):
+	sys.path.append(op.realpath(op.join(__file__, op.pardir, "path", "to", "argparse")))
+from argparse import ArgumentParser
+
+
+class ${1:Worker}(object):
+	class Error(Exception): pass
+
+	def __init__(self):
+		pass
+
+	def run(self):
+		raise $1.Error("Not implemented.");
+
+
+class Main(object):
+	def __init__(self):
+		logging.basicConfig(format=('[%(name)s|%(levelname)s]: %(message)s'))
+		self.parser = self.createParser()
+
+	def createParser(self):
+		parser = ArgumentParser(description="""
+			${2:Description of this script.}
+		""")
+		parser.add_argument("-w", "--wait", action="store_true",
+							help="Prompt user for a key before exiting.")
+		parser.add_argument("-woe", "--waitOnError", action="store_true",
+							help="Prompt user for a key before exiting in case of errors.")
+		parser.add_argument("-v", "--verbosity", action="count", default=0,
+							help="Increase output verbosity. (multi-use)")
+		parser.add_argument("some_arg", nargs='?',
+							help="Some argument that is not a flag.")
+		return parser
+
+	@staticmethod
+	def waitForKey():
+		if sys.platform.startswith("win"): os.system("pause")
+		else: os.system("read -p 'Press ENTER to continue...'")
+
+	def error(self, msg, exitCode=1):
+		logger.error(msg)
+		if self.args.waitOnError:
+			self.waitForKey()
+		sys.exit(exitCode)
+
+	def parseArgs(self):
+		args = self.args = self.parser.parse_args()
+		verbosity = self.verbosity = args.verbosity
+		if verbosity >= 2:
+			logging.getLogger().setLevel(logging.DEBUG)
+		elif verbosity >= 1:
+			logging.getLogger().setLevel(logging.INFO)
+		if args.wait:
+			args.waitOnError = True
+		return args
+
+	def end(self):
+		if self.args.wait:
+			self.waitForKey()
+
+	def run(self):
+		args = self.parseArgs()
+		try:
+			$1().run()
+		except $1.Error as e:
+			self.error(e)
+		self.end()
+
+
+if __name__ == '__main__':
+	Main().run()
+endsnippet
+
+
+snippet module "Complete skeleton for a simple module" b
+# Logging for this module
+import logging
+class NullHandler(logging.Handler): # to support Python < 2.7
+	def emit(self, record): pass
+logger = logging.getLogger(__name__)
+logger.addHandler(NullHandler())
+
+
+__all__ = [
+	"$1",
+]
+
+
+class ${1:MyClass}(object):
+	class $1Error(Exception): pass
+
+	def __init__(self):
+		pass
+
+	def ${2:someMethod}(self):
+		logger.info("$2 called")
+endsnippet
+
+
+snippet abc "Abstract baseclass template" b
+from abc import ABCMeta, abstractmethod
+
+class ${1:MyAbstractClass}(object):
+	__metaclass__ = ABCMeta
+
+	@abstractmethod
+	def ${2:_anAbstractMethod}(self): pass
+endsnippet
+
+
+snippet super "Call parent class method" w
+super(${1:`!p
+if not snip.c:
+	snip.rv = get_class(snip, 'ThisClass')
+else:
+	snip.rv = snip.c`}, self).${2:`!p
+if not snip.c:
+	snip.rv = get_method(snip)
+else:
+	snip.rv = snip.c`}(${3:args})
+endsnippet
+
+
+snippet todo "TODO-entry" b
+# TODO: ${1:`!p
+if not snip.c:
+	ctx = get_defined_name('(?:class|def)', snip.indent, None)
+	if ctx:
+		snip.rv = "In %s" % ctx
+	else:
+		snip.rv = "Task"
+else:
+	snip.rv = snip.c`}
+endsnippet
+
+
+snippet tmp "Mark a temporary section" b
+# TODO: TMP TMP TMP {
+${1:${VISUAL:temp_code()}}
+# TODO: } TMP TMP TMP
+endsnippet

@@ -1,0 +1,309 @@
+global !p
+import re
+def unCamel(camel):
+	if len(camel) == 0:
+		return ""
+	elif len(camel) == 1:
+		return camel.upper()
+	else:
+		result = camel[0].upper() + re.sub('(.)([A-Z][a-z])',r'\1 \2',camel[1:])
+		result = re.sub('([a-z])([A-Z])',r'\1 \2',result)
+		return result;
+endglobal
+
+snippet inc "#include <stdio>" b
+#include <${1:iostream}>
+endsnippet
+
+snippet incm "#include <maya/...>" b
+#include <maya/${1:MGlobal}.h>
+endsnippet
+
+snippet ns "namespace { ... }" b
+namespace${1/.+/ /m}${1:`!p snip.rv = snip.basename or "name"`} {
+	${VISUAL}$0
+}${1/.+/ \/* namespace /m}$1${1/.+/ *\//m}
+endsnippet
+
+
+#snippet if "if (...) {code...}" !b
+#if (${1}) {
+#	${2:${VISUAL}}
+#}
+#endsnippet
+
+priority 1
+
+snippet for "for loop" b
+for (${1:unsigned} ${2:i} = ${5:0}; $2 < ${3:count}; ++$2) {
+	${4:${VISUAL}}
+}
+endsnippet
+
+
+snippet fori "for iterator loop (self-made iterator)" b
+for (${1:iter}.reset(); !$1.isDone(); $1.next()) {
+	${2:${VISUAL}}
+}
+endsnippet
+
+
+snippet fori "for iterator loop (std::iterator)" b
+for (std::vector<${3:type}>::iterator ${1:it} = ${2:array}.begin(); $1 != $2.end(); ++$1) {
+	${4:${VISUAL}}
+}
+endsnippet
+
+
+snippet u "unsigned" w
+unsigned $1
+endsnippet
+
+
+snippet fun "Function" b
+/////////////////////////////////////////////////
+${2:void} ${1:functionName}(${3:int arg1, int arg2}) {
+	${4:${VISUAL}}
+}
+endsnippet
+
+
+snippet enum "Simple enum" b
+/*! \brief  ${4:TODO: Describe $1} */
+enum ${1:EnumName} {
+	${2:Foo}, //!< $2 description.
+	${3:Bar}  //!< $3 description.
+}
+endsnippet
+
+snippet enum "Type-safe enum class for pre C++11 code" b
+/////////////////////////////////////////////////
+//! \brief  ${4:TODO: Describe $1}
+/////////////////////////////////////////////////
+struct ${1:ClassName} {
+	enum Type {
+		${2:Foo}, //!< $2 description.
+		${3:Bar}  //!< $3 description.
+	};
+	$1(Type type) : fType(type) {}
+	operator Type() const { return fType; }
+
+private:
+	Type fType;
+	template <typename T> operator T() const; // no auto conversion of int, bool, ...
+};
+endsnippet
+
+
+snippet class "class" b
+/////////////////////////////////////////////////
+//! \brief  ${5:TODO: Describe $1}
+/////////////////////////////////////////////////
+class ${1:ClassName} ${2:: public ${3:ParentClass} }{
+public:
+	virtual ~$1();
+	$1();
+
+private:
+	${4:// Member variables}
+};
+
+// This goes into an implementation file:
+$1::~$1() {}
+$1::$1() {}
+endsnippet
+
+
+snippet interface "interface" b
+/////////////////////////////////////////////////
+//! \brief  ${4:TODO: Describe interface $1}
+/////////////////////////////////////////////////
+class ${1:InterfaceName} ${2:: public ${3:ParentClass} }{
+public:
+	virtual ~$1() {}
+	virtual void someFunction() = 0;
+};
+endsnippet
+
+
+snippet singleton "singleton via static function variable" b
+/////////////////////////////////////////////////
+//! \brief  ${2:TODO: Describe $1}
+/////////////////////////////////////////////////
+class ${1:SingletonClass} {
+private:
+	$1() {}
+	$1(const $1&);
+	$1& operator=(const $1&);
+
+public:
+	static $1& getInstance() {
+		static $1 theInstance;
+		return theInstance;
+	}
+};
+endsnippet
+
+
+snippet singleton "singleton via pointer" b
+/////////////////////////////////////////////////
+//! \brief  ${2:TODO: Describe $1}
+/////////////////////////////////////////////////
+class ${1:SingletonClass} {
+private:
+	static $1* fInstance;
+	$1() {}
+	$1(const $1&);
+	$1& operator=(const $1&);
+
+public:
+	static $1* getInstance() {
+		if (fInstance == NULL) fInstance = new $1;
+		return fInstance;
+	}
+};
+
+// This goes into an implementation file:
+$1* $1::fInstance = NULL;
+endsnippet
+
+
+#snippet try "try {...} catch() {...}" b
+#try {
+#} catch (std::exception const& ex) {
+#} catch (...) {
+#	throw;
+#}
+#endsnippet
+snippet try "try {...} CATCH_MAYA_STAT" b
+try {
+	${1:${VISUAL}}
+} CATCH_MAYA_STAT;
+endsnippet
+
+
+snippet CH "CHECKSTAT_THROW() macro" b
+CHECKSTAT_THROW(${2:stat}, "${1:error message}");
+endsnippet
+
+
+snippet once "Include header once only guard"
+#ifndef ${1:`!p
+if not snip.c:
+	import random, string
+	name = re.sub(r'[^A-Za-z0-9]+','_', unCamel(snip.fn)).upper()
+	snip.rv = name.upper()
+else:
+	snip.rv = snip.c`}
+#define $1
+
+${0}
+
+#endif /* end of include guard: $1 */
+endsnippet
+
+
+snippet cout "cout << ... << endl;" b
+std::cout << ${1:">>> $2 <<<"} << std::endl;
+endsnippet
+
+
+snippet switch "switch () {...}" b
+switch (${1:determinant}) {
+	case ${2:1}:
+		${3:${VISUAL}}
+		break;
+	default:
+		assert(0);
+}
+endsnippet
+
+snippet case "case (inside a switch)" b
+case ${1:1}:
+	${2:${VISUAL}}
+	break;
+endsnippet
+
+
+snippet Doc "Function/Class Documentation for Doxygen" b
+/////////////////////////////////////////////////
+//! \brief  ${1:${VISUAL:Short description.}}
+//!
+//! ${2:Long description.}
+/////////////////////////////////////////////////
+endsnippet
+
+
+snippet doc "Variable Documentation for Doxygen" b
+/*! \brief  ${1:${VISUAL:Short description.}} */
+//! ${2:Long description.}
+endsnippet
+
+
+snippet sdoc "Variable Documentation for Doxygen" b
+/*! \brief  ${1:${VISUAL:Short description.}} */
+endsnippet
+
+
+snippet "(?<=\S\s)doc\b" "Member documentation in same line" r
+//!< ${1:${VISUAL:Short description.}}
+endsnippet
+
+
+snippet "\/\/! [Ee]x\b" "Code example in Doxygen comment" r
+//! Example:
+//! ~~~
+//! ${1:${VISUAL:code}}
+//! ~~~
+endsnippet
+
+
+snippet test "Unit Testing: Basic .cpp structure" b
+#include "${1:`!p
+if not snip.c:
+	import string
+	snip.rv = re.sub(r'Test$', '', snip.basename)
+else:
+	snip.rv = snip.c`}.h"
+#include "external_libs/catch.hpp"
+
+
+/////////////////////////////////////////////////
+// ${4:$2}
+/////////////////////////////////////////////////
+TEST_CASE("${2:Testing $1}", "${3:[tags]}") {
+	${5:${VISUAL:\/\/ code to check...}}
+}
+endsnippet
+
+
+snippet T "Unit Testing: TEST_CASE" b
+/////////////////////////////////////////////////
+// ${3:$1}
+/////////////////////////////////////////////////
+TEST_CASE("${1:Unique name}", "${2:[tags]}") {
+	${4:${VISUAL:\/\/ code to check...}}
+}
+endsnippet
+
+
+snippet S "Unit Testing: SECTION" b
+SECTION("${1:Section name}") {
+	${2:${VISUAL:\/\/ code to check...}}
+}
+endsnippet
+
+
+snippet R "Unit Testing: REQUIRE macro" b
+REQUIRE(${1:${2:1} == ${3:2}});
+endsnippet
+
+
+snippet C "CAPTURE() value of any expression" b
+CAPTURE($1);
+endsnippet
+
+
+snippet addFlag "Add a flag to the MSyntax object" b
+syntax.addFlag(flag${1:Name}, flag$1Long, ${2:MSyntax::kString});
+endsnippet

@@ -1,0 +1,40 @@
+# :vim:ft=snippets:
+
+snippet twb "Twig: {% block %}" w
+{% block ${1:name} %}${2:${VISUAL:Default Content}}{% endblock %}
+endsnippet
+
+
+snippet twe "Twig: {% extends %}" b
+{% extends "${1:${VISUAL:parent}}.phtml" %}
+endsnippet
+
+
+snippet twi "Twig: {% if %}" b
+{% if ${1:condition} %}
+	${2:${VISUAL:contents}}
+{% endif %}
+endsnippet
+
+
+snippet twf "Twig: {% for val in array %}" b
+{% for ${1:val} in ${2:array} %}
+	${3:${VISUAL:contents}}
+{% else %}
+	${5:contents if there are no items}
+{% endfor %}
+endsnippet
+
+
+snippet twf "Twig: {% for key, val in array %}" b
+{% for ${1:key}, ${2:val} in ${3:array} %}
+	${4:${VISUAL:contents}}
+{% else %}
+	${5:contents if there are no items}
+{% endfor %}
+endsnippet
+
+
+snippet twv "Twig: {{ variable }}" w
+{{ ${1:${VISUAL:variable}} }}
+endsnippet

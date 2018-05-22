@@ -28,6 +28,9 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 
 " To disable a plugin, add it's bundle name to the following list
 let g:pathogen_disabled = []
+if version < 704 || (!has("python3") && !has("python"))
+    call add(g:pathogen_disabled, 'ultisnips')
+endif
 
 " This will actually source the scripts
 call pathogen#infect()
@@ -285,6 +288,29 @@ nnoremap <Leader>mr ^"gy0^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]
 " Evaluate an expression contained in a visual selection and replace the
 " visual selection with the answer:
 vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>a; print $x"<CR>0"cyWddk:s/<C-R>b/<C-R>c/<CR>
+
+
+"----------------------"
+"  Configure Plug-Ins  "
+"----------------------"
+
+" UltiSnips {{{
+if version >= 704 && has("python3") || has("python")
+    nnoremap <Leader>se :UltiSnipsEdit<CR>
+    let g:UltiSnipsEditSplit           = "horizontal"
+    let g:UltiSnipsExpandTrigger       = "<c-j>"
+    let g:UltiSnipsListSnippets        = "<c-tab>"
+    let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
+    let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+endif
+
+" Put these two into ~/.vimrc or ~/vimfiles/custom_settings.vim
+"let g:snips_author = "Your Name"
+"let g:snips_email  = "your@email"
+" }}}
+
+
+runtime custom_settings.vim
 
 
 " vim:set ts=4 sw=4 sts=4 et tw=78 fdm=marker:

@@ -29,6 +29,11 @@ Similarly for GVim, create `~/.gvimrc` (or `~/_gvimrc`) containing:
 	" Your customizations go here...
 
 
+An alternative is to put customizations into the file
+`~/vimfiles/custom_settings.vim`, which you will have to create. It will be
+loaded at the end of processing the `vimrc` and will be ignored by this repo.
+
+
 ## License
 
 The files are licensed under the MIT License, see LICENSE.txt.
