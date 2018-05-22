@@ -332,6 +332,24 @@ endif
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 " }}}
+" CtrlP {{{
+nnoremap <silent> <a-p> :CtrlPBuffer<CR>
+
+let g:ctrlp_working_path_mode = ''
+let g:ctrlp_switch_buffer = 0
+" }}}
+" NERDTree {{{
+nmap <silent> <F12>   :NERDTreeToggle<CR>
+nmap <silent> <C-F12> :NERDTreeMirror<CR>
+nmap <silent> <S-F12> :NERDTreeFind<CR>
+let NERDTreeIgnore=['\~$','^_[[dir]]','\.py[co]$','^tags$','^dist$[[dir]]']
+let NERDTreeMinimalUI=1
+if has('gui_running')
+    let NERDTreeDirArrows=1
+else
+    let NERDTreeDirArrows=0
+endif
+" }}}
 
 
 runtime custom_settings.vim
