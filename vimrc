@@ -20,6 +20,19 @@ if has("autocmd")
 endif
 
 
+"------------------------------"
+"  Pathogen to handle bundles  "
+"------------------------------"
+" Load Pathogen
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+
+" To disable a plugin, add it's bundle name to the following list
+let g:pathogen_disabled = []
+
+" This will actually source the scripts
+call pathogen#infect()
+
+
 "----------------"
 "  Basic config  "
 "----------------"
