@@ -308,6 +308,30 @@ endif
 "let g:snips_author = "Your Name"
 "let g:snips_email  = "your@email"
 " }}}
+" fugitive (Vim Git wrapper) {{{
+" Start external gitk, since fugitive doesn't have an equivalent.
+if has("win32")
+    command! Gitk        silent !start gitk --all
+    command! Gitgui      silent !start git-gui
+    command! Gitterminal silent !start /min git_shell.bat
+else
+    command! Gitk   silent !gitk --all
+    command! Gitgui silent !git gui
+endif
+
+nnoremap <c-c> <Nop>
+nnoremap <c-g><c-s> :Gstatus<CR>
+nnoremap <c-g><c-c> :Gcommit<CR>
+nnoremap <silent> <c-g><c-k> :Gitk<CR>
+nnoremap <silent> <c-g><c-g> :Gitgui<CR>
+
+if has("win32")
+    nnoremap <c-g><c-t> :Gitterminal<CR>
+    nnoremap <silent> <c-g><c-e> :silent !start /min cmd /C start .<CR>
+endif
+
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+" }}}
 
 
 runtime custom_settings.vim
