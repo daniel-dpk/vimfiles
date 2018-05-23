@@ -19,6 +19,10 @@ function! s:search(pattern, flags, mode)
     call search(a:pattern, a:flags)
 endfunction
 
+" Quickly switch between main and test files.
+noremap <buffer> <silent> <LocalLeader>t :call ft#python#ToggleTestImpl(0)<CR>
+noremap <buffer> <silent> <LocalLeader>T :call ft#python#ToggleTestImpl(1)<CR>
+
 
 " Restore the previous cpo.
 let &cpo = s:save_cpo

@@ -40,6 +40,12 @@ noremap <buffer> <silent> <A-j> :call search("^\\%(public:\\\|private:\\\|protec
 " Search for all TODOs in the source
 noremap <buffer> <a-O> :vimgrep /\<TODO:/j **/*.c **/*.cpp **/*.h <Bar> :cope<CR>
 
+" Quickly switch between header/implementation/test files.
+noremap <buffer> <silent> <LocalLeader>e :call ft#cpp#ToggleHeaderImpl(0)<CR>
+noremap <buffer> <silent> <LocalLeader>E :call ft#cpp#ToggleHeaderImpl(1)<CR>
+noremap <buffer> <silent> <LocalLeader>t :call ft#cpp#ToggleTestImpl(0)<CR>
+noremap <buffer> <silent> <LocalLeader>T :call ft#cpp#ToggleTestImpl(1)<CR>
+
 
 " Restore the previous cpo.
 let &cpo = s:save_cpo
