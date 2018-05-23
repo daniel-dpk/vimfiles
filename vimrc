@@ -210,6 +210,8 @@ if has('gui_running')
     set background=dark
     silent! colorscheme desert " fallback if the below scheme doesn't exist
     silent! colorscheme hybrid
+    "let g:dpk_harsh_colors = 0
+    "color DPK_colors
 else
     set background=dark
     colorscheme desert
