@@ -23,7 +23,7 @@ endif
 "------------------------------"
 "  Pathogen to handle bundles  "
 "------------------------------"
-" Load Pathogen
+" Load Pathogen (https://github.com/tpope/vim-pathogen)
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 
 " To disable a plugin, add it's bundle name to the following list
@@ -308,7 +308,8 @@ vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&
 "  Configure Plug-Ins  "
 "----------------------"
 
-" UltiSnips {{{1
+" UltiSnips (https://github.com/SirVer/ultisnips) {{{1
+" Needed for default snippets: https://github.com/honza/vim-snippets
 if version >= 704 && has("python3") || has("python")
     nnoremap <Leader>se :UltiSnipsEdit<CR>
     let g:UltiSnipsEditSplit           = "horizontal"
@@ -323,7 +324,7 @@ endif
 "let g:snips_email  = "your@email"
 
 
-" fugitive (Vim Git wrapper) {{{1
+" fugitive (Vim Git wrapper) (https://github.com/tpope/vim-fugitive) {{{1
 " Start external gitk, since fugitive doesn't have an equivalent.
 if has("win32")
     command! Gitk        silent !start gitk --all
@@ -348,14 +349,15 @@ endif
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 
-" CtrlP {{{1
+" CtrlP (https://github.com/ctrlpvim/ctrlp.vim) {{{1
 nnoremap <silent> <a-p> :CtrlPBuffer<CR>
 
 let g:ctrlp_working_path_mode = ''
 let g:ctrlp_switch_buffer = 0
+let g:ctrlp_show_hidden = 1 " show dotfiles by default
 
 
-" NERDTree {{{1
+" NERDTree (https://github.com/scrooloose/nerdtree) {{{1
 nmap <silent> <F12>   :NERDTreeToggle<CR>
 nmap <silent> <C-F12> :NERDTreeMirror<CR>
 nmap <silent> <S-F12> :NERDTreeFind<CR>
@@ -368,8 +370,63 @@ else
 endif
 
 
+" Localvimrc (https://github.com/embear/vim-localvimrc) {{{1
+let g:localvimrc_sandbox = 0
+let g:localvimrc_ask = 1
+let g:localvimrc_persistent = 1
+
+
+" vim-session (https://github.com/xolox/vim-session) {{{1
+" Requires: https://github.com/xolox/vim-misc
+let g:session_autoload = 'no'
+let g:session_autosave = 'yes'
+
+
+" vim-css-color (https://github.com/skammer/vim-css-color) {{{1
+let g:cssColorVimDoNotMessMyUpdatetime = 1
+
+
+" Tabular (https://github.com/godlygeek/tabular) {{{1
+nmap <LocalLeader>a=           mm:Tabularize /==\?>\?<CR>`m
+vmap <LocalLeader>a=           mm:Tabularize /==\?>\?<CR>`m
+nmap <LocalLeader>a>           mm:Tabularize /=><CR>`m
+vmap <LocalLeader>a>           mm:Tabularize /=><CR>`m
+nmap <LocalLeader>a:           mm:Tabularize /:\zs/l0l1<CR>`m
+vmap <LocalLeader>a:           mm:Tabularize /:\zs/l0l1<CR>`m
+nmap <LocalLeader>a;           mm:Tabularize /;\zs/l0l1<CR>`m
+vmap <LocalLeader>a;           mm:Tabularize /;\zs/l0l1<CR>`m
+nmap <LocalLeader>a"           mm:Tabularize /^[^"]*\zs"/l1l0<CR>`m
+vmap <LocalLeader>a"           mm:Tabularize /^[^"]*\zs"/l1l0<CR>`m
+nmap <LocalLeader>A"           mm:Tabularize /^[^"]*\zs"/l1l1<CR>`m
+vmap <LocalLeader>A"           mm:Tabularize /^[^"]*\zs"/l1l1<CR>`m
+nmap <LocalLeader>a,           mm:Tabularize /,\zs/l0l1<CR>`m
+vmap <LocalLeader>a,           mm:Tabularize /,\zs/l0l1<CR>`m
+nmap <LocalLeader>a{           mm:Tabularize /{<CR>`m
+vmap <LocalLeader>a{           mm:Tabularize /{<CR>`m
+nmap <LocalLeader>a(           mm:Tabularize /(\zs/l0<CR>`m
+vmap <LocalLeader>a(           mm:Tabularize /(\zs/l0<CR>`m
+nmap <LocalLeader>a/           mm:Tabularize /\/\/.*<CR>`m
+vmap <LocalLeader>a/           mm:Tabularize /\/\/.*<CR>`m
+nmap <LocalLeader>a\           mm:Tabularize /\\$<CR>`m
+vmap <LocalLeader>a\           mm:Tabularize /\\$<CR>`m
+nmap <LocalLeader>a#           mm:Tabularize /#.*<CR>`m
+vmap <LocalLeader>a#           mm:Tabularize /#.*<CR>`m
+nmap <LocalLeader>a<Space>     mm:Tabularize /^\s*[^\/ \t]\S\+\zs\s/l0l0<CR>`m
+vmap <LocalLeader>a<Space>     mm:Tabularize /^\s*[^\/ \t]\S\+\zs\s/l0l0<CR>`m
+nmap <LocalLeader>a<S-Space>   mm:Tabularize /^\s*[^\/ \t].\{-}\zs\s\S\+\( = \S\+\)\?\()[^)]*\)\?$/l0<CR>`m
+vmap <LocalLeader>a<S-Space>   mm:Tabularize /^\s*[^\/ \t].\{-}\zs\s\S\+\( = \S\+\)\?\()[^)]*\)\?$/l0<CR>`m
+nmap <LocalLeader>a<C-Space>   mm:Tabularize /^\s*[^\/ \t]\S\+\s\+\S\+\zs\s/l0l0<CR>`m
+vmap <LocalLeader>a<C-Space>   mm:Tabularize /^\s*[^\/ \t]\S\+\s\+\S\+\zs\s/l0l0<CR>`m
+nmap <LocalLeader>a<C-S-Space> mm:Tabularize /\S\zs /l0l1<CR>`m
+vmap <LocalLeader>a<C-S-Space> mm:Tabularize /\S\zs /l0l1<CR>`m
+nmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
+vmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
+
+
 " Load custom settings (if any) {{{1
 runtime custom_settings.vim
+
+" }}}1
 
 
 " vim:set ts=4 sw=4 sts=4 et tw=78 fdm=marker:

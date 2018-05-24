@@ -1,5 +1,6 @@
 " This tweaks the "hybrid.vim" colorscheme. For this to work, the
 " AfterColors.vim plug-in needs to be installed.
+" See: https://github.com/vim-scripts/AfterColors.vim
 
 " Search (#f0c674)
 "highlight Search guibg=#AF9056

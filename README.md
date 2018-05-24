@@ -1,5 +1,14 @@
 # My personal Vim configuration
 
+## Prerequisites
+
+Automatic tag generation is handled by
+[Gutentags](https://github.com/ludovicchabant/vim-gutentags).
+It is recommended to use
+[universal-ctags](https://github.com/universal-ctags/ctags)
+instead of `exuberant-ctags` for wildcard support and better performance.
+
+
 ## Installation
 
 Clone this repo and init/update bundles:
@@ -12,6 +21,12 @@ Clone this repo and init/update bundles:
 On Unix/Linux (and probably Mac):
 
 	ln -s ~/vimfiles ~/.vim
+
+
+To generate documentation for all installed plugins, run the following inside
+Vim:
+
+    :Helptags
 
 
 ## Customization
