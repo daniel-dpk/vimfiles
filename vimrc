@@ -308,7 +308,7 @@ vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&
 "  Configure Plug-Ins  "
 "----------------------"
 
-" UltiSnips {{{
+" UltiSnips {{{1
 if version >= 704 && has("python3") || has("python")
     nnoremap <Leader>se :UltiSnipsEdit<CR>
     let g:UltiSnipsEditSplit           = "horizontal"
@@ -321,8 +321,9 @@ endif
 " Put these two into ~/.vimrc or ~/vimfiles/custom_settings.vim
 "let g:snips_author = "Your Name"
 "let g:snips_email  = "your@email"
-" }}}
-" fugitive (Vim Git wrapper) {{{
+
+
+" fugitive (Vim Git wrapper) {{{1
 " Start external gitk, since fugitive doesn't have an equivalent.
 if has("win32")
     command! Gitk        silent !start gitk --all
@@ -345,14 +346,16 @@ if has("win32")
 endif
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-" }}}
-" CtrlP {{{
+
+
+" CtrlP {{{1
 nnoremap <silent> <a-p> :CtrlPBuffer<CR>
 
 let g:ctrlp_working_path_mode = ''
 let g:ctrlp_switch_buffer = 0
-" }}}
-" NERDTree {{{
+
+
+" NERDTree {{{1
 nmap <silent> <F12>   :NERDTreeToggle<CR>
 nmap <silent> <C-F12> :NERDTreeMirror<CR>
 nmap <silent> <S-F12> :NERDTreeFind<CR>
@@ -363,9 +366,9 @@ if has('gui_running')
 else
     let NERDTreeDirArrows=0
 endif
-" }}}
 
 
+" Load custom settings (if any) {{{1
 runtime custom_settings.vim
 
 
