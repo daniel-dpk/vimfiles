@@ -423,6 +423,10 @@ nmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
 vmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
 
 
+" vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
+let g:GPGUseAgent = 0
+
+
 " Load custom settings (if any) {{{1
 runtime custom_settings.vim
 
