@@ -331,8 +331,8 @@ if has("win32")
     command! Gitgui      silent !start git-gui
     command! Gitterminal silent !start /min git_shell.bat
 else
-    command! Gitk   silent !gitk --all
-    command! Gitgui silent !git gui
+    command! Gitk   silent !gitk --all&
+    command! Gitgui silent !git gui&
 endif
 
 nnoremap <c-c> <Nop>
