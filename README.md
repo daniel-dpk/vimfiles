@@ -23,10 +23,9 @@ On Unix/Linux (and probably Mac):
 	ln -s ~/vimfiles ~/.vim
 
 
-To generate documentation for all installed plugins, run the following inside
-Vim:
+To generate documentation for all installed plugins, run the following:
 
-    :Helptags
+    vim "+set wildignore=" +Helptags +q!
 
 
 ## Customization
