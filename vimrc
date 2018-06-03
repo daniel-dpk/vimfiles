@@ -106,6 +106,9 @@ set wildignore+=*/debug*/*,*/release*/*,*/Doxygen/*
 " Hide buffers even when they have changed (think twice before doing :q!)
 set hidden
 
+" When an opened file changes outside Vim, immediately load changes
+set autoread
+
 " Configure sessions
 " Default: blank,buffers,curdir,folds,help,options,tabpages,winsize
 set sessionoptions-=options
