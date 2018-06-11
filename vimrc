@@ -251,10 +251,10 @@ function! s:DPK_grepFileMatcher(extended)
 endfunction
 
 " Quickly jump between matches (i.e. in the error list)
-nnoremap <buffer> <LocalLeader>n :cn<CR>zv
-nnoremap <buffer> <LocalLeader>N :cnf<CR>zv
-nnoremap <buffer> <LocalLeader>p :cp<CR>zv
-nnoremap <buffer> <LocalLeader>P :cpf<CR>zv
+nnoremap <LocalLeader>n :cn<CR>zv
+nnoremap <LocalLeader>N :cnf<CR>zv
+nnoremap <LocalLeader>p :cp<CR>zv
+nnoremap <LocalLeader>P :cpf<CR>zv
 
 
 " Make F4 toggle spell checking (for Vim 7 and above).
