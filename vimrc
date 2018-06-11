@@ -293,18 +293,25 @@ nnoremap <Leader><Leader>u :set ff=unix<CR>:set ff?<CR>
 
 
 " Evaluating math expressions using perl
-" Evaluate an expression contained on the full current line and place answer
-" in a new line below the current line:
-nnoremap <Leader>ma yyp^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>-y0j0P
-" Evaluate an expression contained in a visual selection and place the answer
-" in a new line below the current line:
-vnoremap <Leader>ma yo<Esc>p^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>-y0j0P
-" Evaluate an expression contained on the full current line and replace the
-" current line with the answer:
-nnoremap <Leader>mr ^"gy0^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>^"gP
-" Evaluate an expression contained in a visual selection and replace the
-" visual selection with the answer:
-vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>a; print $x"<CR>0"cyWddk:s/<C-R>b/<C-R>c/<CR>
+if has("win32")
+    " Evaluate an expression contained on the full current line and place answer
+    " in a new line below the current line:
+    nnoremap <Leader>ma yyp^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>-y0j0P
+    " Evaluate an expression contained in a visual selection and place the answer
+    " in a new line below the current line:
+    vnoremap <Leader>ma yo<Esc>p^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>-y0j0P
+    " Evaluate an expression contained on the full current line and replace the
+    " current line with the answer:
+    nnoremap <Leader>mr ^"gy0^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>^"gP
+    " Evaluate an expression contained in a visual selection and replace the
+    " visual selection with the answer:
+    vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>a; print $x"<CR>0"cyWddk:s/<C-R>b/<C-R>c/<CR>
+else
+    nnoremap <Leader>ma yyp^y$V:!perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>"; print \$x"<CR>-y0j0P
+    vnoremap <Leader>ma yo<Esc>p^y$V:!perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>"; print \$x"<CR>-y0j0P
+    nnoremap <Leader>mr ^"gy0^y$V:!perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>"; print \$x"<CR>^"gP
+    vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>a; print \$x"<CR>0"cyWddk:s/<C-R>b/<C-R>c/<CR>
+endif
 
 
 "----------------------"
