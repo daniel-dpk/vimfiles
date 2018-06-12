@@ -343,6 +343,7 @@ if has("win32")
 else
     command! Gitk   silent !gitk --all&
     command! Gitgui silent !git gui&
+    command! Gitterminal silent !x-terminal-emulator
 endif
 
 nnoremap <c-c> <Nop>
@@ -351,8 +352,8 @@ nnoremap <c-g><c-c> :Gcommit<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>
 nnoremap <silent> <c-g><c-g> :Gitgui<CR>
 
+nnoremap <c-g><c-t> :Gitterminal<CR>
 if has("win32")
-    nnoremap <c-g><c-t> :Gitterminal<CR>
     nnoremap <silent> <c-g><c-e> :silent !start /min cmd /C start .<CR>
 endif
 
