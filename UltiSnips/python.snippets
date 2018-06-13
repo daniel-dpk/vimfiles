@@ -111,7 +111,7 @@ def get_defined_name(kind, current_indent, default=None, full_output=False):
 	import vim
 	line = vim.current.range.start
 	buf = vim.current.buffer
-	key_line = next((i for i in xrange(line-1, -1, -1)
+	key_line = next((i for i in range(line-1, -1, -1)
 					if is_defining_line(kind, buf[i], current_indent)), None)
 	if key_line is not None:
 		m = re.search(r'%s\s+(\w+)' % kind, buf[key_line])

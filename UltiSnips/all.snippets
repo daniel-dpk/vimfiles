@@ -17,7 +17,7 @@ def _parse_comments(s):
     try:
         while True:
             # get the flags and text of a comment part
-            flags,text = i.next().split(':', 1)
+            flags, text = next(i).split(':', 1)
 
             if len(flags) == 0:
                 if len(text) == 1:
@@ -31,11 +31,11 @@ def _parse_comments(s):
                     indent = " " * int(flags[-1])
                 ctriple.append(text)
 
-                flags,text = i.next().split(':', 1)
+                flags,text = next(i).split(':', 1)
                 assert(flags[0] == 'm')
                 ctriple.append(text)
 
-                flags,text = i.next().split(':', 1)
+                flags,text = next(i).split(':', 1)
                 assert(flags[0] == 'e')
                 ctriple.append(text)
                 ctriple.append(indent)
@@ -55,7 +55,7 @@ def _get_comment_format():
 
     ft = vim.eval("&filetype")
     # check if the comment dict has the format for the current file
-    if _commentDict.has_key(ft):
+    if ft in _commentDict:
         return _commentDict[ft]
 
     # otherwise parse vim's comments and add it for later use
