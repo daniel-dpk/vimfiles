@@ -294,7 +294,7 @@ endsnippet
 
 
 snippet doc "Oneline (short) documentation string" b
-"""${1:Documentation}"""
+r"""${1:Documentation}"""
 endsnippet
 
 snippet Doc "Documentation string with heading and body" bm
@@ -351,11 +351,11 @@ endsnippet
 
 
 snippet p "Print debug message >>> inside brackets <<<" b
-print ">>> ${1:Message} <<<"
+print(">>> ${1:Message} <<<")
 endsnippet
 
 snippet pv "Print variable in debug message >>> inside brackets <<<" b
-print ">>> ${1:variable} = %s <<<" % (${2:$1})
+print(">>> ${1:variable} = %s <<<" % (${2:$1}))
 endsnippet
 
 snippet pp "Pretty Print init" b
@@ -372,7 +372,7 @@ endsnippet
 
 snippet bases "Print all base classes of an object" b
 import inspect
-print "Bases:\n  " + "\n  ".join(repr(c) for c in inspect.getmro(${1:obj}.__class__))
+print("Bases:\n  " + "\n  ".join(repr(c) for c in inspect.getmro(${1:obj}.__class__)))
 endsnippet
 
 
