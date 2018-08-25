@@ -434,6 +434,16 @@ nmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
 vmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
 
 
+" clang-format {{{1
+if has("win32")
+    map <C-K> :pyf ~/Apps/clang-format/clang-format.py<cr>
+    imap <C-K> <c-o>:pyf ~/Apps/clang-format/clang-format.py<cr>
+else
+    map <C-K> :py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
+    imap <C-K> <c-o>:py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
+endif
+
+
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
 let g:GPGUseAgent = 0
 
