@@ -444,6 +444,30 @@ else
 endif
 
 
+" syntastic {{{1
+nnoremap <Leader>sc :SyntasticCheck<CR>
+nnoremap <Leader>sl :Errors<CR>
+nnoremap <Leader>sr :SyntasticReset<CR>
+nnoremap <Leader>st :SyntasticToggleMode<CR>
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+"let g:syntastic_cursor_column = 0    " speed up on large lists of errors
+let g:syntastic_enable_highlighting = 0
+
+" Don't run automatically; wait for a :SyntasticCheck
+let g:syntastic_mode_map = {
+    \ "mode": "passive",
+    \ "active_filetypes": [],
+    \ "passive_filetypes": [] }
+
+
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
 let g:GPGUseAgent = 0
 
