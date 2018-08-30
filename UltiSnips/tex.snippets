@@ -152,6 +152,25 @@ snippet fpr "figPutRows - Fancy multi-figure with caption" b
 endsnippet
 
 
+snippet fig2 "2 figures side by side (subfigure)" b
+\begin{figure}[${2:htpb}]
+	\centering
+	\subfigure[]{
+		\includegraphics[width=0.45\textwidth]{${3:img1}}
+		\label{fig:$1_a}
+	}%
+	\subfigure[]{
+		\includegraphics[width=0.45\textwidth]{${4:img2}}
+		\label{fig:$1_b}
+	}
+	\caption{%
+		${5:TODO}
+	}
+	\label{fig:${1:TODO}}
+\end{figure}
+endsnippet
+
+
 snippet if "if... then... else..." b
 \ifthenelse{${1:\equal{${2:\foo}}{${3:bar}}}}{%
 	${4:${VISUAL:ifyes}}

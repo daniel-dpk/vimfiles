@@ -125,6 +125,24 @@ def get_class(snip, default='MyClass', full_output=False):
 def get_method(snip, default='method', full_output=False):
 	return get_defined_name('def', snip.indent, default, full_output)
 
+def get_package_path(path, max_steps=100):
+	import re
+	import os.path as op
+	path = op.splitext(path)[0]
+	result = op.basename(path)
+	cur = path
+	for i in range(1, max_steps+1):
+		if i == max_steps:
+			raise RuntimeError("Maximum path length traversed.")
+		parent = op.dirname(cur)
+		if op.isdir(op.join(parent, ".git")):
+			break
+		if parent == cur:
+			return op.basename(path)
+		result = "%s.%s" % (op.basename(parent), result)
+		cur = parent
+	return result
+
 endglobal
 
 
@@ -272,9 +290,7 @@ endsnippet
 
 
 snippet def "Function without docstring" b
-def ${1:function}(`!p
-if snip.indent:
-	snip.rv = 'self' + (", " if len(t[2]) else "")`${2:arg1}):
+def ${1:function}(self, ${2:arg1}):
 	${3:${VISUAL:pass}}
 endsnippet
 
@@ -301,7 +317,6 @@ snippet Doc "Documentation string with heading and body" bm
 r"""${1:Brief description.}
 
 ${2:Long description.}
-
 """
 endsnippet
 
@@ -324,6 +339,59 @@ Notes
 -----
 ${7:TODO: Some notes about the implementation (if needed).}
 
+"""
+endsnippet
+
+
+snippet gDoc "Google-Style documentation" bm
+r"""${1:TODO: One-line summary.}
+
+${2:TODO: Description.}
+
+Args:
+	${3:var1}: ${4:TODO: Description of \`var1\`.}
+"""
+endsnippet
+
+
+snippet gDOC "Google-Style documentation" bm
+r"""${1:TODO: One-line summary.}
+
+${2:TODO: Description.}
+
+Args:
+	${3:var1}: ${4:TODO: Description of \`var1\`.}
+
+${5:Returns:
+	TODO: Explanation of return value.}
+
+${6:Raises:
+	TODO: RuntimeException}
+
+${7:Examples:
+	TODO: code can go here.}
+"""
+endsnippet
+
+
+snippet pdoc "Package Documentation (@package ...)" b
+r"""@package ${1:`!p
+if not snip.c:
+	snip.rv = get_package_path(path)
+else:
+	snip.rv = snip.c
+`}
+
+${2:One line description.}
+
+${3:Detailed description.}
+
+
+@b Examples
+
+@code
+${4:...}
+@endcode
 """
 endsnippet
 
@@ -577,4 +645,27 @@ snippet tmp "Mark a temporary section" b
 # TODO: TMP TMP TMP {
 ${1:${VISUAL:temp_code()}}
 # TODO: } TMP TMP TMP
+endsnippet
+
+
+snippet $ "LaTeX \\f$ ... \\f$" w
+\f$ ${1:${VISUAL}} \f$
+endsnippet
+
+snippet [ "LaTeX \\f[ ... \\f]" w
+\f[
+	${1:${VISUAL}}
+\f]
+endsnippet
+
+snippet { "LaTeX \\f{ ... \\f}" w
+\f{eqnarray*}{
+	${1:${VISUAL}}
+\f}
+endsnippet
+
+snippet @code "@code...@endcode Doxygen tags" b
+@code
+$1
+@endcode
 endsnippet
