@@ -385,6 +385,13 @@ else
     let NERDTreeDirArrows=0
 endif
 
+function NERDTreeMyOpenFile(node)
+    call a:node.activate({'reuse': 'currenttab', 'where': 'p'})
+endfunction
+autocmd VimEnter * :call
+            \ NERDTreeAddKeyMap({'key': 'o', 'callback': 'NERDTreeMyOpenFile',
+            \                    'scope': 'FileNode', 'override': 1 })
+
 
 " Localvimrc (https://github.com/embear/vim-localvimrc) {{{1
 let g:localvimrc_sandbox = 0
