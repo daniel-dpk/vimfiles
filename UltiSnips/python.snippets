@@ -430,7 +430,11 @@ print(">>> ${1:Message} <<<")
 endsnippet
 
 snippet pv "Print variable in debug message >>> inside brackets <<<" b
-print(">>> ${1:variable} = %s <<<" % (${2:$1}))
+print(">>> ${1:variable} = %s <<<" % ((${2:$1}),))
+endsnippet
+
+snippet pvi "print_indented() variable in debug message >>> after brackets" b
+print_indented(">>> ${1:variable} = ", ${2:$1})
 endsnippet
 
 snippet pp "Pretty Print init" b
