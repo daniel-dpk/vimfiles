@@ -63,7 +63,7 @@
 	url = https://github.com/jamessan/vim-gnupg.git
 [submodule "bundle/vim-fontsize"]
 	path = bundle/vim-fontsize
-	url = git@github.com:drmikehenry/vim-fontsize.git
+	url = https://github.com/drmikehenry/vim-fontsize.git
 [submodule "bundle/syntastic"]
 	path = bundle/syntastic
 	url = https://github.com/vim-syntastic/syntastic.git
