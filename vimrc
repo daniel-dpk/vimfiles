@@ -19,13 +19,24 @@ if has("autocmd")
     filetype plugin indent on
 endif
 
-if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+if !has('gui_running')
+    let c='a'
+    while c <= 'z'
+      exec "set <A-".c.">=\e".c
+      exec "nmap \e".c." <A-".c.">"
+      exec "set <A-".toupper(c).">=\e".toupper(c)
+      exec "nmap \e".toupper(c)." <A-".toupper(c).">"
+      let c = nr2char(1+char2nr(c))
+    endw
+    set ttimeout
     set ttimeoutlen=50
-else
-    let &t_SI = "\e[5 q"
-    let &t_EI = "\e[2 q"
+    if exists('$TMUX')
+        let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
+        let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+    else
+        let &t_SI = "\e[5 q"
+        let &t_EI = "\e[2 q"
+    endif
 endif
 
 
