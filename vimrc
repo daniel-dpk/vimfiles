@@ -374,8 +374,8 @@ endif
 nnoremap <c-c> <Nop>
 nnoremap <c-g><c-s> :Gstatus<CR>
 nnoremap <c-g><c-c> :Gcommit<CR>
-nnoremap <silent> <c-g><c-k> :Gitk<CR>
-nnoremap <silent> <c-g><c-g> :Gitgui<CR>
+nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>
+nnoremap <silent> <c-g><c-g> :Gitgui<CR>:redraw!<CR>
 
 nnoremap <c-g><c-t> :Gitterminal<CR>
 if has("win32")
