@@ -302,7 +302,8 @@ if v:version >= 700
     map <C-S-Left>  <ESC>:tabmove -1<CR>
     map <C-S-Right> <ESC>:tabmove +1<CR>
     nnoremap <silent> tt :tab split<CR>
-    nnoremap <silent> TT :tabclose<CR>
+    " Close current tab leaving us on previous tab (instead of next).
+    nnoremap <silent> TT :silent! tabmove -1<CR>:tabclose<CR>
 endif
 
 " In insert mode, we want the <HOME> key to move the cursor to the start of
