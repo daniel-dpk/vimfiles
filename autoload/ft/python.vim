@@ -42,3 +42,35 @@ function! s:TryToEdit(fname)
     endif
     return 0
 endfunction
+
+" Taken from: https://stackoverflow.com/a/4028423
+function! ft#python#GetPythonTextWidth()
+    if !exists('g:python_normal_text_width')
+        let l:normal_text_width = 79
+    else
+        let l:normal_text_width = g:python_normal_text_width
+    endif
+
+    if !exists('g:python_comment_text_width')
+        let l:comment_text_width = 72
+    else
+        let l:comment_text_width = g:python_comment_text_width
+    endif
+
+    let cur_syntax = synIDattr(synIDtrans(synID(line("."), max([1, col(".")-1]), 0)), "name")
+    if cur_syntax == "Comment"
+        return l:comment_text_width
+    elseif cur_syntax == "String"
+        " Check to see if we're in a docstring
+        let lnum = line(".")
+        while lnum >= 1 && (synIDattr(synIDtrans(synID(lnum, col([lnum, "$"]) - 1, 0)), "name") == "String" || match(getline(lnum), '\v^\s*$') > -1)
+            if match(getline(lnum), "\\('''\\|\"\"\"\\)") > -1
+                " Assume that any longstring is a docstring
+                return l:comment_text_width
+            endif
+            let lnum -= 1
+        endwhile
+    endif
+
+    return l:normal_text_width
+endfunction

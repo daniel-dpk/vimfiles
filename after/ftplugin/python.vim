@@ -28,5 +28,20 @@ noremap <buffer> <silent> <LocalLeader>t :call ft#python#ToggleTestImpl(0)<CR>
 noremap <buffer> <silent> <LocalLeader>T :call ft#python#ToggleTestImpl(1)<CR>
 
 
+"" Uncomment to get auto-textwidth for code vs. comments/docstrings.
+"" Test width in normal text vs. comments/docstrings.
+"let g:python_normal_text_width = 78
+"let g:python_comment_text_width = 72
+"augroup pep8textwidth
+"    au!
+"    autocmd InsertEnter *
+"                \ :if &ft == 'python' || &ft == 'pyrex' |
+"                \ :exe 'setlocal textwidth='.ft#python#GetPythonTextWidth() |
+"                \ :endif
+"augroup END
+"
+"vnoremap <buffer> <silent> gq :<C-U>exe 'setlocal textwidth='.ft#python#GetPythonTextWidth()<CR>gvgq
+
+
 " Restore the previous cpo.
 let &cpo = s:save_cpo
