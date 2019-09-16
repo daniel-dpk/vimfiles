@@ -158,8 +158,9 @@ class ${1:MyClass}(${2:object}):
 	def __init__(self$3):
 		`!p
 args = get_args(t[3])
-if t[2] != 'object':
-	snip.rv = 'super(%s, self).__init__(%s)' % (t[1], ", ".join(args))
+if t[2] not in ('object', ''):
+	#snip.rv = 'super(%s, self).__init__(%s)' % (t[1], ", ".join(args))
+	snip.rv = 'super().__init__(%s)' % (", ".join(args))
 else:
 	snip.rv = "pass"
 `
@@ -461,11 +462,12 @@ endsnippet
 
 
 snippet unittest "Unit test file template" b
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import unittest
 import sys
 
+from testutils import DpkTestCase, slowtest
 from .${1:`!p
 if not snip.c:
 	import string
@@ -475,12 +477,13 @@ else:
 `} import ${2:SomeClass}
 
 
-class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:unittest.TestCase}):
+class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:DpkTestCase}):
 	def setUp(self):
 		pass
 	def tearDown(self):
 		pass
 
+	#@slowtest
 	def test_${5:`!p snip.rv = t[2].lower()`}(self):
 		self.assertEqual(1, 0) # ... should fail
 
@@ -502,7 +505,7 @@ endsnippet
 
 
 snippet script "Complete script skeleton with argument handling etc." b
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import os
@@ -627,16 +630,43 @@ class ${1:MyAbstractClass}(object):
 endsnippet
 
 
+#snippet super "Call parent class method" w
+#super(${1:`!p
+#if not snip.c:
+#	snip.rv = get_class(snip, 'ThisClass')
+#else:
+#	snip.rv = snip.c`}, self).${2:`!p
+#if not snip.c:
+#	snip.rv = get_method(snip)
+#else:
+#	snip.rv = snip.c`}(${3:args})
+#endsnippet
+
 snippet super "Call parent class method" w
-super(${1:`!p
-if not snip.c:
-	snip.rv = get_class(snip, 'ThisClass')
-else:
-	snip.rv = snip.c`}, self).${2:`!p
+super().${2:`!p
 if not snip.c:
 	snip.rv = get_method(snip)
 else:
 	snip.rv = snip.c`}(${3:args})
+endsnippet
+
+
+snippet setstate "__setstate__() with backwards compatibility" b
+def __setstate__(self, state):
+	r"""Restore this object from the given unpickled state."""
+	# compatibility with data from previous versions
+	self.${1:_new_property} = ${2:None}
+	# Restore state. This overrides the above if contained in the data.
+	self.__dict__.update(state)
+endsnippet
+
+
+snippet getstate "__getstate__()" b
+def __getstate__(self):
+	r"""Return a picklable state object."""
+	state = self.__dict__.copy()
+	#state['problematic_property'] = None
+	return state
 endsnippet
 
 
@@ -657,6 +687,12 @@ snippet tmp "Mark a temporary section" b
 # TODO: TMP TMP TMP {
 ${1:${VISUAL:temp_code()}}
 # TODO: } TMP TMP TMP
+endsnippet
+
+
+snippet param "@param the_name Description" b
+@param ${1:var}
+	${2:${VISUAL:Description.}}
 endsnippet
 
 
@@ -689,4 +725,14 @@ endsnippet
 
 snippet anc "Doxygen \\anchor id text" b
 \anchor ${1:identifier} [${2:1}] ${3:${VISUAL:text}}
+endsnippet
+
+
+snippet es "np.einsum('ij,i,j', g, v1, v2)" w
+np.einsum('$1->$2', ${3:${VISUAL}})
+endsnippet
+
+
+snippet m "init member with value (self.a = a)" b
+self.${1:${VISUAL:m}} = ${1/^_//}
 endsnippet
