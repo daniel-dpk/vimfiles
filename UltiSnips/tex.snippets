@@ -8,7 +8,7 @@ def get_from_line_above(pattern, default='', full_output=False):
 	buf = vim.current.buffer
 	def _is_defining_line(i):
 		return True if re.search(pattern, buf[i]) else False
-	key_line = next((i for i in xrange(line-1, -1, -1) if _is_defining_line(i)),
+	key_line = next((i for i in range(line-1, -1, -1) if _is_defining_line(i)),
 					None)
 	if key_line is not None:
 		m = re.search(pattern, buf[key_line])
@@ -355,4 +355,13 @@ endsnippet
 
 snippet inc "\includegraphics{...}" b
 \includegraphics{${1:imagefile}}
+endsnippet
+
+
+snippet bibi "beamer bibitem" b
+%\setbeamertemplate{bibliography item}[default]
+\bibitem[${1:Author}, ${2:year}]{$1$2}
+	$1
+	\newblock {\em ${3:title}}.
+	\newblock ${4:details}.
 endsnippet
