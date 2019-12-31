@@ -414,7 +414,7 @@ else
     let NERDTreeDirArrows=0
 endif
 
-function NERDTreeMyOpenFile(node)
+function! NERDTreeMyOpenFile(node)
     call a:node.activate({'reuse': 'currenttab', 'where': 'p'})
 endfunction
 autocmd VimEnter * :call
