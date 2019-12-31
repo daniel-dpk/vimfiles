@@ -318,26 +318,34 @@ nnoremap <Leader>cd :cd %:p:h<CR>:pwd<CR>
 nnoremap <Leader><Leader>u :set ff=unix<CR>:set ff?<CR>
 
 
-" Evaluating math expressions using perl
-if has("win32")
-    " Evaluate an expression contained on the full current line and place answer
-    " in a new line below the current line:
-    nnoremap <Leader>ma yyp^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>-y0j0P
-    " Evaluate an expression contained in a visual selection and place the answer
-    " in a new line below the current line:
-    vnoremap <Leader>ma yo<Esc>p^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>-y0j0P
-    " Evaluate an expression contained on the full current line and replace the
-    " current line with the answer:
-    nnoremap <Leader>mr ^"gy0^y$V:!perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>"; print $x"<CR>^"gP
-    " Evaluate an expression contained in a visual selection and replace the
-    " visual selection with the answer:
-    vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "$pi = 4*atan2(1,1);sub fact{$_[0]&&$_[0]>=1?$_[0]*fact($_[0]-1):1} $x = <C-R>a; print $x"<CR>0"cyWddk:s/<C-R>b/<C-R>c/<CR>
-else
-    nnoremap <Leader>ma yyp^y$V:!perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>"; print \$x"<CR>-y0j0P
-    vnoremap <Leader>ma yo<Esc>p^y$V:!perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>"; print \$x"<CR>-y0j0P
-    nnoremap <Leader>mr ^"gy0^y$V:!perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>"; print \$x"<CR>^"gP
-    vnoremap <Leader>mr "aygvrXgv"by:r !perl -e "\$pi = 4*atan2(1,1);sub fact{\$_[0]&&\$_[0]>=1?\$_[0]*fact(\$_[0]-1):1} \$x = <C-R>a; print \$x"<CR>0"cyWddk:s/<C-R>b/<C-R>c/<CR>
-endif
+" Credit: xolox on Stack Overflow (https://stackoverflow.com/a/6271254)
+function! s:get_visual_selection(concat)
+    let [line1, col1] = getpos("'<")[1:2]
+    let [line2, col2] = getpos("'>")[1:2]
+    let lines = getline(line1, line2)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][:col2 - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][col1 - 1:]
+    if a:concat
+        return join(lines, "")
+    endif
+    return join(lines, "\n")
+endfunction
+
+function! Py3Calculate(expr, trim)
+    let result = system("python3 -c \"from math import *; print(".a:expr.")\"")
+    if a:trim
+        let result = substitute(result, '\n$', '', '')
+    endif
+    return result
+endfunction
+
+nnoremap <Leader>ma "=Py3Calculate(getline('.'), 0)<CR>p
+vnoremap <Leader>ma <Esc>"=Py3Calculate(<SID>get_visual_selection(1), 0)<CR>p
+nnoremap <Leader>mr ^c$<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
+vnoremap <Leader>mr c<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
 
 
 "----------------------"
