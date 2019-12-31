@@ -21,6 +21,11 @@ syn region texRefZone		matchgroup=texStatement start="\\\([Ee]qns\?\|[Ff]ig\|[Ss
 " files. The correct fix would be to remove 'subequations' from 'texBadMath'.
 call TexNewMathZone("M","subequations",0)
 
+" Add this AMS-math environment.
+call TexNewMathZone("M","align",1)
+call TexNewMathZone("M","alignat",1)
+call TexNewMathZone("M","gather",1)
+
 syntax region   texTodoBraces   start="\%(\\TODO\|\\\)\@<!{" skip="\\\\\|\\[{}]" end="}" transparent contained contains=texTodoBraces
 syntax region   texTodoBox      start="^\s*\\TODO{" skip="\\\\\|\\[{}]" end="}" end="%stop}" contains=texTodoBraces containedin=ALL
 syntax match    texTodoBoxTodo  "TODO"  contained containedin=texTodoBox
