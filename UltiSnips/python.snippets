@@ -154,7 +154,7 @@ endglobal
 # visible in the history of my Vimfiles repo.
 
 snippet class "class without docstrings" b
-class ${1:MyClass}(${2:object}):
+class ${1:MyClass}($2):
 	def __init__(self$3):
 		`!p
 args = get_args(t[3])
@@ -168,7 +168,7 @@ endsnippet
 
 
 snippet classdoc "class with docstrings" b
-class ${1:MyClass}(${2:object}):
+class ${1:MyClass}($2):
 	`!p snip.rv = tripple_quotes(snip)`${3:TODO: Docstring for $1.}`!p snip.rv = tripple_quotes(snip)`
 
 	def __init__(self$4):
@@ -190,7 +190,7 @@ endsnippet
 
 
 snippet slotclass "class with slots and docstrings" b
-class ${1:MyClass}(${2:object}):
+class ${1:MyClass}($2):
 	`!p snip.rv = tripple_quotes(snip)`${3:Docstring for $1. }`!p snip.rv = tripple_quotes(snip)`
 `!p
 snip >> 1
@@ -524,7 +524,7 @@ if sys.version_info < (2, 7):
 from argparse import ArgumentParser
 
 
-class ${1:Worker}(object):
+class ${1:Worker}():
 	class Error(Exception): pass
 
 	def __init__(self):
@@ -534,7 +534,7 @@ class ${1:Worker}(object):
 		raise $1.Error("Not implemented.");
 
 
-class Main(object):
+class Main():
 	def __init__(self):
 		logging.basicConfig(format=('[%(name)s|%(levelname)s]: %(message)s'))
 		self.parser = self.createParser()
@@ -607,7 +607,7 @@ __all__ = [
 ]
 
 
-class ${1:MyClass}(object):
+class ${1:MyClass}():
 	class $1Error(Exception): pass
 
 	def __init__(self):
@@ -621,12 +621,9 @@ endsnippet
 snippet abc "Abstract baseclass template" b
 from abc import ABCMeta, abstractmethod
 
-from six import add_metaclass
-
-@add_metaclass(ABCMeta)
-class ${1:MyAbstractClass}(object):
+class ${1:MyAbstractClass}(${2:base}, metaclass=ABCMeta):
 	@abstractmethod
-	def ${2:_anAbstractMethod}(self): pass
+	def ${2:_an_abstract_method}(self): pass
 endsnippet
 
 
