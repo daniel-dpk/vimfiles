@@ -90,6 +90,15 @@ set formatoptions+=r " insert comment leader when hitting <CR>
 if version >= 704
     set formatoptions+=j " remove comment characters upon joining (with 'J')
 endif
+
+
+function! CustomFoldText()
+    let line = substitute(foldtext(), '.\{-}:', "", "")
+    let indent = repeat(' ', indent(v:foldstart))
+    let numLines = v:foldend - v:foldstart + 1
+    return indent . line . ' [+' . v:folddashes . ' ' . numLines . ' lines]'
+endfunction
+set foldtext=CustomFoldText()
 set foldenable
 set foldmethod=marker
 set foldlevelstart=99
