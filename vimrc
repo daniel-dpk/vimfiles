@@ -93,7 +93,7 @@ endif
 
 
 function! CustomFoldText()
-    let line = substitute(foldtext(), '.\{-}:', "", "")
+    let line = substitute(foldtext(), '.\{-}: ', "", "")
     let indent = repeat(' ', indent(v:foldstart))
     let numLines = v:foldend - v:foldstart + 1
     return indent . line . ' [+' . v:folddashes . ' ' . numLines . ' lines]'
