@@ -26,9 +26,9 @@ call TexNewMathZone("M","align",1)
 call TexNewMathZone("M","alignat",1)
 call TexNewMathZone("M","gather",1)
 
-syntax region   texTodoBraces   start="\%(\\TODO\|\\\)\@<!{" skip="\\\\\|\\[{}]" end="}" transparent contained contains=texTodoBraces
-syntax region   texTodoBox      start="^\s*\\TODO{" skip="\\\\\|\\[{}]" end="}" end="%stop}" contains=texTodoBraces containedin=ALL
-syntax match    texTodoBoxTodo  "TODO"  contained containedin=texTodoBox
+syntax region   texTodoBraces   start="\c\%(\\TODO\|\\\)\@<!{" skip="\\\\\|\\[{}]" end="}" transparent contained contains=texTodoBraces
+syntax region   texTodoBox      start="^\s*\c\\TODO{" skip="\\\\\|\\[{}]" end="}" end="%stop}" contains=texTodoBraces containedin=ALL
+syntax keyword  texTodoBoxTodo  TODO todo  contained containedin=texTodoBox
 syntax keyword	texTodo		contained MARK
 
 syntax match	texFoldMarks	contained "{\{3}\d*$\|}\{3}\d*$" containedin=texComment
