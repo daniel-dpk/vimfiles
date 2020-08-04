@@ -362,6 +362,18 @@ nnoremap <Leader>mr ^c$<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
 vnoremap <Leader>mr c<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
 
 
+" Search across line breaks using
+"   :S Hello World
+" Credit: Bryan Ward on Stack Exchange (https://unix.stackexchange.com/a/11848)
+function! SearchMultiLine(bang, ...)
+    if a:0 > 0
+        let sep = (a:bang) ? '\_W\+' : '\_s\+'
+        let @/ = join(a:000, sep)
+    endif
+endfunction
+command! -bang -nargs=* -complete=tag S call SearchMultiLine(<bang>0, <f-args>)|normal! /<C-R>/<CR>
+
+
 "----------------------"
 "  Configure Plug-Ins  "
 "----------------------"
