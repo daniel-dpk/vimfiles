@@ -10,6 +10,10 @@ set guioptions-=r
 set guioptions-=L
 set tabpagemax=30 " maximum number of tabs
 
+" Disable beep and flashing
+set visualbell
+set t_vb=
+
 
 " Fonts
 if has("win32")

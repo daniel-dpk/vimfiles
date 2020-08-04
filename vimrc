@@ -123,6 +123,11 @@ if &t_Co > 2 || has("gui_running")
     set hlsearch
 endif
 
+" Disable beep and flashing
+set noerrorbells
+set visualbell
+set t_vb=
+
 
 " Excluding files when matching
 set wildignore+=tags,*~,*/.*/*,*/.hg/*,*/.svn/*
