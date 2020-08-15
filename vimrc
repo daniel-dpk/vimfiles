@@ -29,7 +29,7 @@ if !has('gui_running')
       let c = nr2char(1+char2nr(c))
     endw
     set ttimeout
-    set ttimeoutlen=50
+    set ttimeoutlen=0
     if exists('$TMUX')
         let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
         let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
