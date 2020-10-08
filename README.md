@@ -18,6 +18,12 @@ Clone this repo and init/update bundles:
 	git submodule update --init
 
 
+**IMPORTANT:** If you currently have a `~/.vim` directory, first back it up
+and rename it e.g. to `~/.vim-backup`. Likewise, backup and rename/remove any
+existing `~/.vimrc` and `~/.gvimrc` (or `~/_vimrc` and `~/_gvimrc` on
+Windows).
+
+
 On Unix/Linux (and probably Mac):
 
 	ln -s ~/vimfiles ~/.vim
