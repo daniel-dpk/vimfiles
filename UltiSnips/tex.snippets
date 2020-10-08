@@ -387,10 +387,11 @@ else:
 	snip.rv = snip.c`}}
 	${2:${VISUAL:content}}
 \end{frame}
+%\endinput % skip the remainder of this file
 endsnippet
 
 snippet inc "\includegraphics{...}" b
-\includegraphics{${1:imagefile}}
+\includegraphics[width=${2:0.5}\linewidth,valign=t]{${1:imagefile}}
 endsnippet
 
 
@@ -408,7 +409,6 @@ snippet cols "columns (beamer)" b
 	\column{0.5\textwidth}
 		${1:${VISUAL:content}}
 	\column{0.5\textwidth}
-		$2
 \end{columns}
 endsnippet
 
