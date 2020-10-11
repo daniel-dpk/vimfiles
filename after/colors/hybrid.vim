@@ -7,6 +7,10 @@
 highlight Search guibg=#997E4C
 "highlight Search guibg=#876F43
 
+" Highlighting matching parentheses
+" (in the terminal, it is difficult to tell where the cursor is)
+highlight MatchParen cterm=NONE ctermbg=DarkBlue ctermfg=White
+
 " Folded (bg:#1c1c1c)
 "highlight Folded guibg=#232323
 highlight Folded guibg=#262626
