@@ -499,6 +499,8 @@ nmap <LocalLeader>a<C-S-Space> mm:Tabularize /\S\zs /l0l1<CR>`m
 vmap <LocalLeader>a<C-S-Space> mm:Tabularize /\S\zs /l0l1<CR>`m
 nmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
 vmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
+nmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
+vmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
 
 
 " clang-format {{{1
