@@ -51,6 +51,8 @@ let g:pathogen_disabled = []
 if version < 704 || (!has("python3") && !has("python"))
     call add(g:pathogen_disabled, 'ultisnips')
 endif
+call add(g:pathogen_disabled, 'syntastic')
+"call add(g:pathogen_disabled, 'ale')
 
 " This will actually source the scripts
 call pathogen#infect()
@@ -514,14 +516,14 @@ endif
 
 
 " syntastic {{{1
-nnoremap <Leader>sc :SyntasticCheck<CR>
-nnoremap <Leader>sl :Errors<CR>
-nnoremap <Leader>sr :SyntasticReset<CR>
-nnoremap <Leader>st :SyntasticToggleMode<CR>
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"nnoremap <Leader>sc :SyntasticCheck<CR>
+"nnoremap <Leader>sl :Errors<CR>
+"nnoremap <Leader>sr :SyntasticReset<CR>
+"nnoremap <Leader>st :SyntasticToggleMode<CR>
+"
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -535,6 +537,45 @@ let g:syntastic_mode_map = {
     \ "mode": "passive",
     \ "active_filetypes": [],
     \ "passive_filetypes": [] }
+
+
+" ALE (Asynchronous Lint Engine) (https://github.com/dense-analysis/ale) {{{1
+"
+" The below configuration of ALE disables it by default. You can press '\ale'
+" (without quote marks) to activate/deactivate in normal mode. Also, it is
+" currently only active for Python and only uses 'pylint'.
+
+nnoremap <silent> <Leader>ale :ALEToggle<CR>
+
+"let g:ale_sign_column_always = 0
+let g:ale_disable_lsp = 1
+let g:ale_enabled = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters_explicit = 1
+"let g:ale_linters = {}
+let g:ale_linters = {'python': ['pylint']}
+
+function! LinterStatus() abort
+    if !g:ale_enabled | return '' | endif
+    let l:counts = ale#statusline#Count(bufnr(''))
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+    return l:counts.total == 0 ? '' : printf(
+                \   '  %dW %dE ', all_non_errors, all_errors
+                \)
+endfunction
+
+function! LinterStatusOK() abort
+    if !g:ale_enabled | return '' | endif
+    return ale#statusline#Count(bufnr('')).total == 0 ? '  OK ' : ''
+endfunction
+
+set statusline+=%{g:ale_enabled?'\ ':''}
+set statusline+=%#DiffAdd#%{LinterStatusOK()}
+set statusline+=%#warningmsg#%{LinterStatus()}
+set statusline+=%*
 
 
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1

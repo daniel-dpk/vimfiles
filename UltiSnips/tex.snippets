@@ -165,11 +165,11 @@ endsnippet
 snippet fig2 "2 figures side by side (subfigure)" b
 \begin{figure}${1:[tpb]}\centering%
 	\subfigure[]{%
-		\addimg[width=0.45\textwidth]{${2:img1}}%
+		\includegraphics[width=0.45\textwidth]{${2:img1}}%
 		\label{fig:$1_a}
 	}%
 	\subfigure[]{%
-		\addimg[width=0.45\textwidth]{${3:img2}}%
+		\includegraphics[width=0.45\textwidth]{${3:img2}}%
 		\label{fig:$1_b}
 	}
 	\caption{\label{fig:${4:TODO}}%
@@ -181,7 +181,7 @@ endsnippet
 
 snippet fig "figure" b
 \begin{figure}
-	\addimg[width=0.45\linewidth]{${1:image}}%
+	\includegraphics[width=0.45\linewidth]{${1:image}}%
 	\caption[]{\label{fig:${2:TODO}}%
 		${3:${VISUAL:...}}
 	}
@@ -191,7 +191,7 @@ endsnippet
 
 snippet sfig "figure with side caption" b
 \begin{SCfigure}
-	\addimg[width=0.45\linewidth]{${1:image}}%
+	\includegraphics[width=0.45\linewidth]{${1:image}}%
 	\caption[]{\label{fig:${2:TODO}}%
 		${3:${VISUAL:...}}
 	}
@@ -480,10 +480,22 @@ snippet ttouch "T_touch" w
 $\ttouch$
 endsnippet
 
-snippet T- "$\Theta_{(n)}$" w
+snippet T- "$\Theta_{-}$" w
+$\Theta_{-}$
+endsnippet
+
+snippet T+ "$\Theta_{+}$" w
+$\Theta_{+}$
+endsnippet
+
+snippet T+- "$\Theta_{+-}$" w
+$\Theta_{\pm}$
+endsnippet
+
+snippet Tn "$\Theta_{(n)}$" w
 $\Theta_{(n)}$
 endsnippet
 
-snippet T+ "$\Theta_{(\ell)}$" w
+snippet Tl "$\Theta_{(ell)}$" w
 $\Theta_{(\ell)}$
 endsnippet
