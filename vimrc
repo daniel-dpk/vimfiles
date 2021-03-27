@@ -54,6 +54,9 @@ endif
 call add(g:pathogen_disabled, 'syntastic')
 "call add(g:pathogen_disabled, 'ale')
 
+" This old plugin seems to make Markdown files load excessively slow
+call add(g:pathogen_disabled, 'vim-css-color')
+
 " This will actually source the scripts
 call pathogen#infect()
 
