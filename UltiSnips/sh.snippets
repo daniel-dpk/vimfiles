@@ -98,3 +98,14 @@ for ${1:var} in "$@"; do
 	echo "$$1"
 done
 endsnippet
+
+
+snippet prompt "Prompt for user input (y/n)" b
+read -p "${1:Yes or no?} [y/n] " -r
+echo
+if [[ $REPLY =~ ^[Yy](es)?$ ]]; then
+	echo "Yes"
+else
+	echo "No"
+fi
+endsnippet
