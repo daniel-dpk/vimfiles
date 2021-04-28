@@ -9,7 +9,35 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd $SCRIPT_DIR
 endsnippet
 
-snippet args "argument parsing" b
+
+snippet usage "usage message" b
+usage() {
+	cat <<END
+Usage: \`basename \$0\` [OPTIONS]
+
+	${1:Description}
+
+OPTIONS:
+	-f/--force  Description of flag -f. Default: \$force
+	-h          Show this help message
+END
+}
+endsnippet
+
+
+snippet args "argument parsing (*simple*)" b
+force=0
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-f|--force) force=1 ;;
+		*) echo "ERROR: Unknown argument: $1"; exit 1 ;;
+	esac
+	shift
+done
+endsnippet
+
+
+snippet args "argument parsing (*complex*)" b
 # Default values for options
 ${1:opt1}="${2:def1}"
 ${4:opt2}="${5:def2}"
