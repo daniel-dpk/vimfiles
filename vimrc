@@ -446,10 +446,13 @@ else
 endif
 
 function! NERDTreeMyOpenFile(node)
-    call a:node.activate({'reuse': 'currenttab', 'where': 'p'})
+    call a:node.activate({'reuse': 'currenttab', 'where': 'p', 'keepopen':!nerdtree#closeTreeOnOpen()})
 endfunction
 autocmd VimEnter * :call
             \ NERDTreeAddKeyMap({'key': 'o', 'callback': 'NERDTreeMyOpenFile',
+            \                    'scope': 'FileNode', 'override': 1 })
+autocmd VimEnter * :call
+            \ NERDTreeAddKeyMap({'key': '<CR>', 'callback': 'NERDTreeMyOpenFile',
             \                    'scope': 'FileNode', 'override': 1 })
 
 
