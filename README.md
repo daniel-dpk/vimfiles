@@ -74,6 +74,18 @@ To generate documentation for all installed plugins, run the following:
     vim "+set wildignore=" +Helptags +q!
 
 
+## Installing new plug-ins
+
+Plug-ins are handled by Pathogen, so the usual steps are (e.g.):
+
+    cd ~/vimfiles/bundle
+    git submodule add https://github.com/ctrlpvim/ctrlp.vim.git
+
+To generate the help, as above, execute:
+
+    vim "+set wildignore=" +Helptags +q!
+
+
 ## Customization
 
 To customize settings without modifying the repo, create the file `~/.vimrc`
