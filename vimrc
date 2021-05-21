@@ -467,6 +467,11 @@ let g:session_autoload = 'no'
 let g:session_autosave = 'yes'
 
 
+" maximizer (https://github.com/szw/vim-maximizer) {{{1
+let g:maximizer_set_default_mapping = 0
+nnoremap <silent> <LocalLeader>z :MaximizerToggle!<CR>
+
+
 " vim-css-color (https://github.com/skammer/vim-css-color) {{{1
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 
