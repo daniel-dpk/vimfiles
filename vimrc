@@ -318,8 +318,8 @@ nmap <silent> <A-S-k> <C-W>k
 if v:version >= 700
     map <C-Left>  <ESC>:tabprev<CR>
     map <C-Right> <ESC>:tabnext<CR>
-    map <C-S-Left>  <ESC>:tabmove -1<CR>
-    map <C-S-Right> <ESC>:tabmove +1<CR>
+    map <S-Left>  <ESC>:tabmove -1<CR>
+    map <S-Right> <ESC>:tabmove +1<CR>
     nnoremap <silent> tt :tab split<CR>
     " Close current tab leaving us on previous tab (instead of next).
     nnoremap <silent> TT :silent! tabmove -1<CR>:tabclose<CR>
