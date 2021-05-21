@@ -301,10 +301,9 @@ nnoremap <LocalLeader>p :cp<CR>zv
 nnoremap <LocalLeader>P :cpf<CR>zv
 
 
-" Make F4 toggle spell checking (for Vim 7 and above).
+" Make ,s toggle spell checking (for Vim 7 and above).
 if has("spell")
-    nmap <F4> <ESC>:set spell!<CR>
-    imap <F4> <ESC>:set spell!<CR>a
+    nmap <LocalLeader>s <ESC>:set spell!<CR>
 endif
 
 
