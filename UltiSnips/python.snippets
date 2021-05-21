@@ -222,7 +222,7 @@ endsnippet
 
 
 snippet testcase "pyunit testcase" b
-class Test${1:Class}(${2:unittest.TestCase}):
+class Test${1:Class}(${2:testutils.DpkTestCase}):
 	def test_${3:name}(self):
 		${4:pass}
 endsnippet
@@ -235,16 +235,16 @@ endsnippet
 
 
 snippet ae "Assert equal" b
-self.assertEqual(${1:first}, ${2:second})
+self.assertEqual(${1:actual}, ${2:expected})
 endsnippet
 
 snippet ane "Assert not equal" b
-self.assertNotEqual(${1:first}, ${2:second})
+self.assertNotEqual(${1:actual}, ${2:expected})
 endsnippet
 
 
 snippet aae "Assert almost equal" b
-self.assertAlmostEqual(${1:first}, ${2:second})
+self.assertAlmostEqual(${1:actual}, ${2:expected})
 endsnippet
 
 snippet ar "Assert raises" b
@@ -463,11 +463,12 @@ endsnippet
 
 snippet unittest "Unit test file template" b
 #!/usr/bin/env python3
+# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
 
 import unittest
 import sys
 
-from testutils import DpkTestCase, slowtest
+import testutils
 from .${1:`!p
 if not snip.c:
 	import string
@@ -477,13 +478,12 @@ else:
 `} import ${2:SomeClass}
 
 
-class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:DpkTestCase}):
+class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:testutils.DpkTestCase}):
 	def setUp(self):
 		pass
 	def tearDown(self):
 		pass
 
-	#@slowtest
 	def test_${5:`!p snip.rv = t[2].lower()`}(self):
 		self.assertEqual(1, 0) # ... should fail
 
@@ -495,6 +495,16 @@ def run_tests():
 
 if __name__ == '__main__':
 	unittest.main()
+endsnippet
+
+
+snippet slow "Decorator for a *slow* test" b
+@testutils.slowtest
+endsnippet
+
+
+snippet skip "Decorator to *skip* a test" b
+@unittest.skip("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ WIP @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 endsnippet
 
 
