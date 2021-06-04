@@ -186,7 +186,7 @@ if has("autocmd")
         autocmd!
 
         " Separate colorscheme for Todo lists.
-        autocmd BufEnter Todo.txt set background=dark |
+        autocmd BufEnter Todo.\(txt\|gpg\) set background=dark |
                     \ silent! colorscheme darkblue |
                     \ silent! colorscheme oceandeep
 
@@ -589,8 +589,8 @@ set statusline+=%*
 
 
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
-let g:GPGUseAgent = 0
 let g:GPGUsePipes = 1
+let g:GPGPreferSign = 1
 
 
 " Load custom settings (if any) {{{1
