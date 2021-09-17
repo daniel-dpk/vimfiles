@@ -20,7 +20,7 @@ setlocal nolisp		" Make sure lisp indenting doesn't supersede us
 setlocal autoindent
 setlocal indentexpr=GetGAPIndent(v:lnum)
 setlocal indentkeys=o,O=end,=fi,=else,=elif,=od,=\)
-let GAPIndentShift = 2
+let GAPIndentShift = 4
 
 " Only define the function once.
 if exists("*GetGAPIndent")
