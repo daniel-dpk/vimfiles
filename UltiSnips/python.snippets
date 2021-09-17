@@ -135,7 +135,7 @@ def get_package_path(path, max_steps=100):
 		if i == max_steps:
 			raise RuntimeError("Maximum path length traversed.")
 		parent = op.dirname(cur)
-		if op.isdir(op.join(parent, ".git")):
+		if not op.isfile(op.join(parent, "__init__.py")):
 			break
 		if parent == cur:
 			return op.basename(path)
@@ -222,7 +222,7 @@ endsnippet
 
 
 snippet testcase "pyunit testcase" b
-class Test${1:Class}(${2:testutils.DpkTestCase}):
+class Test${1:Class}(${2:testutils.Dpk}TestCase):
 	def test_${3:name}(self):
 		${4:pass}
 endsnippet
@@ -290,6 +290,19 @@ def ${1:my_prop}(self):
 @$1.setter
 def $1(self, value):
 	self.$2 = value
+endsnippet
+
+snippet aprop "Abstract property" b
+@property
+@abstractmethod
+def ${1:my_prop}(self):
+	${2:${VISUAL:pass}}
+endsnippet
+
+
+snippet ifn "if x is None: ..." b
+if ${1:x} is None:
+	${2:${VISUAL:pass}}
 endsnippet
 
 
@@ -481,7 +494,7 @@ else:
 `} import ${2:SomeClass}
 
 
-class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:testutils.DpkTestCase}):
+class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:testutils.Dpk}TestCase):
 	def setUp(self):
 		pass
 	def tearDown(self):
