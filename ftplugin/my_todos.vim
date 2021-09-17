@@ -42,10 +42,9 @@ endfunction
 
 nnoremap <buffer> <silent> <LocalLeader>x yyp_C[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>t yyp_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>s yyp_C<tab>[ ]<space>
+nnoremap <buffer> <silent> <LocalLeader>S yyp_C<tab>[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>X yyP_C[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>T yyP_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>S yyP_C<tab>[ ]<space>
 
 noremap <buffer> <silent> <A-k> :call search("^\\* \\S", 'bWs')<CR>
 noremap <buffer> <silent> <A-j> :call search("^\\* \\S", 'Ws')<CR>
