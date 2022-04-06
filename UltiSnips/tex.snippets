@@ -1,3 +1,5 @@
+extends plaintex
+
 global !p
 
 
@@ -19,8 +21,8 @@ def get_from_line_above(pattern, default='', full_output=False):
 endglobal
 
 
-snippet todo "\TODO{...}" w
-\TODO{${1:${VISUAL:Task}}}
+snippet todo "\todo{...}" w
+\todo{${1:${VISUAL:Task}}}
 endsnippet
 
 
@@ -378,7 +380,7 @@ snippet par "Paragraph head" b
 endsnippet
 
 
-snippet frame "beamer frame block" b
+snippet frame "beamer frame" b
 \begin{frame}
 	\frametitle{${1:`!p
 if not snip.c:
@@ -389,6 +391,33 @@ else:
 \end{frame}
 %\endinput % skip the remainder of this file
 endsnippet
+
+
+snippet vframe "fullscreen video frame" b
+\begin{frame}[plain]
+	\centering
+	\begin{tikzpicture}[remember picture,overlay]
+		\node[at=(current page.center)] {
+			\href{run:${1:video}.mp4}{%
+				\includegraphics[keepaspectratio,width=\paperwidth,height=\paperheight]{%
+					$1-f000000%
+				}%
+			}%
+		};
+	\end{tikzpicture}
+\end{frame}
+%\endinput % skip the remainder of this file
+endsnippet
+
+
+snippet source "source reference (TikZ)" b
+\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=0.5em,yshift=0.0em,anchor=south west] at (current page.south west) {
+		\tiny (source: ${1:authors}, ${2:ref}${3:, modified})
+	};
+\end{tikzpicture}
+endsnippet
+
 
 snippet inc "\includegraphics{...}" b
 \includegraphics[width=${2:0.5}\linewidth,valign=t]{${1:imagefile}}
