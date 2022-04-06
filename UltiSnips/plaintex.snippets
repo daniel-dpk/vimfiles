@@ -9,7 +9,7 @@ snippet #! "LaTeX document template" b
 %\usepackage{graphicx}
 %\usepackage{color}
 %\usepackage{calc}
-%\usepackage[export]{adjustbox} % adds `frame` option to \includegraphics{}
+%\usepackage[export]{adjustbox} % adds \`frame\` option to \includegraphics{}
 %\usepackage{amsmath}
 %\usepackage{amssymb}
 %\usepackage{hyperref} % generate a TOC in the pdf file for faster navigation
@@ -54,7 +54,7 @@ no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
 
 % vimExec{
-%   nnoremap <buffer> ,,c :update<CR>:silent !cd "%:p:h" && pdflatex -interaction=batchmode "%:t"<CR>
-%   nnoremap <buffer> ,,C :update<CR>:silent !cd "%:p:h" && gnome-terminal --maximize -- bash -c "pdflatex \"%:t\" && read -s -n 1 -p 'Press any key to continue...'"<CR>
+%   nnoremap <buffer> ,,c :update<CR>:silent !cd "%:p:h" && pdflatex -interaction=batchmode "%:t"<CR><C-l>
+%   nnoremap <buffer> ,,C :update<CR>:!cd "%:p:h" && pdflatex "%:t"<CR>
 % }vimExec
 endsnippet

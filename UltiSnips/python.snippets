@@ -216,6 +216,13 @@ write_init_body(args, t[2], snip)
 endsnippet
 
 
+snippet enum "enum class" b
+class ${1:MyEnum}(Enum):
+	r"""${2:Description}"""
+	${3:MEMBER1} = 1
+endsnippet
+
+
 snippet akw "*args, **kwargs" w
 *args, **kwargs
 endsnippet
@@ -398,6 +405,11 @@ ${7:Examples:
 endsnippet
 
 
+snippet docp "Property documentation string" b
+r"""[property] ${1:${VISUAL:Documentation}}"""
+endsnippet
+
+
 snippet pdoc "Package Documentation (@package ...)" b
 r"""@package ${1:`!p
 if not snip.c:
@@ -417,6 +429,19 @@ ${3:Detailed description.}
 	${4:...}
 \`\`\`
 """
+endsnippet
+
+
+snippet Ex "Examples docs section" bm
+@b Examples
+
+\`\`\`
+	${1:${VISUAL:...}}
+\`\`\`
+endsnippet
+
+snippet Ret "@return docs" b
+@return ${1:${VISUAL:...}}
 endsnippet
 
 
@@ -448,6 +473,14 @@ endsnippet
 
 snippet pv "Print variable in debug message >>> inside brackets <<<" b
 print(">>> ${1:variable} = %s <<<" % ((${2:$1}),))
+endsnippet
+
+snippet pf "Print an f-string" b
+print(f"$1")
+endsnippet
+
+snippet pfv "Print f-string '>>> var = {var} <<<'" b
+print(f">>> ${1:variable} = {$1} <<<")
 endsnippet
 
 snippet pvi "print_indented() variable in debug message >>> after brackets" b
@@ -674,22 +707,61 @@ else:
 endsnippet
 
 
-snippet setstate "__setstate__() with backwards compatibility" b
+snippet setstate "__setstate__() for __dict__ class" b
 def __setstate__(self, state):
 	r"""Restore this object from the given unpickled state."""
-	# compatibility with data from previous versions
 	self.${1:_new_property} = ${2:None}
-	# Restore state. This overrides the above if contained in the data.
 	self.__dict__.update(state)
 endsnippet
 
 
-snippet getstate "__getstate__()" b
+snippet getstate "__getstate__() for __dict__ class" b
 def __getstate__(self):
 	r"""Return a picklable state object."""
 	state = self.__dict__.copy()
 	#state['problematic_property'] = None
 	return state
+endsnippet
+
+
+snippet setstate "__setstate__() for __slots__ class" b
+def __setstate__(self, state):
+	r"""Restore this object from the given unpickled state."""
+	dict_data, slot_data = state
+	try:
+		dict_data, slot_data = self.edit_setstate(dict_data, slot_data)
+	except AttributeError:
+		pass
+	if dict_data and hasattr(self, "__dict__"):
+		self.__dict__ = dict_data
+	for k, v in slot_data.items():
+		setattr(self, k, v)
+endsnippet
+
+
+snippet getstate "__getstate__() for __slots__ class" b
+def __getstate__(self):
+	r"""Return a picklable state object."""
+	slots = set().union(*(
+		getattr(cls, '__slots__', ())
+		for cls in type(self).__mro__
+	))
+	try:
+		dict_data = self.__dict__.copy()
+	except AttributeError:
+		dict_data = None
+	slot_data = {s: getattr(self, s) for s in slots if hasattr(self, s)}
+	try:
+		dict_data, slot_data = self.edit_getstate(dict_data, slot_data)
+	except AttributeError:
+		pass
+	return dict_data, slot_data
+endsnippet
+
+
+snippet new "__new__() method" b
+def __new__(cls, *args, **kwargs):
+	return super().__new__(cls, *args, **kwargs)
 endsnippet
 
 
