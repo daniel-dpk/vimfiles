@@ -388,9 +388,9 @@ if version >= 704 && has("python3") || has("python")
     nnoremap <Leader>se :UltiSnipsEdit<CR>
     let g:UltiSnipsEditSplit           = "horizontal"
     let g:UltiSnipsExpandTrigger       = "<c-j>"
-    let g:UltiSnipsListSnippets        = "<c-tab>"
-    let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
-    let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+    let g:UltiSnipsListSnippets        = "<c-k>"
+    let g:UltiSnipsJumpForwardTrigger  = "<c-l>"
+    let g:UltiSnipsJumpBackwardTrigger = "<c-h>"
 endif
 
 " Put these two into ~/.vimrc or ~/vimfiles/custom_settings.vim
