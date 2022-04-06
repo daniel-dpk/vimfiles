@@ -56,5 +56,15 @@ no sea takimata sanctus est Lorem ipsum dolor sit amet.
 % vimExec{
 %   nnoremap <buffer> ,,c :update<CR>:silent !cd "%:p:h" && pdflatex -interaction=batchmode "%:t"<CR><C-l>
 %   nnoremap <buffer> ,,C :update<CR>:!cd "%:p:h" && pdflatex "%:t"<CR>
+%   nnoremap <buffer> ,,v :update<CR>:silent !cd "%:p:h" && evince "%:t:r.pdf" &<CR>
+% }vimExec
+endsnippet
+
+
+snippet vim "Vim mappings for compiling" b
+% vimExec{
+%   nnoremap <buffer> ,,c :update<CR>:silent !cd "%:p:h" && pdflatex -interaction=batchmode "%:t"<CR>
+%   nnoremap <buffer> ,,C :update<CR>:silent !cd "%:p:h" && gnome-terminal --maximize -- bash -c "pdflatex \"%:t\" && read -s -n 1 -p 'Press any key to continue...'"<CR>
+%   nnoremap <buffer> ,,v :update<CR>:silent !cd "%:p:h" && evince "%:t:r.pdf" &<CR>
 % }vimExec
 endsnippet
