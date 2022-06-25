@@ -528,3 +528,48 @@ endsnippet
 snippet Tl "$\Theta_{(ell)}$" w
 $\Theta_{(\ell)}$
 endsnippet
+
+
+snippet Proc "Pseudocode procedure" b
+\Procedure{${1:Name}}{${2:args}}
+	${3:${VISUAL:\\State}}
+\EndProcedure
+endsnippet
+
+snippet St "Pseudocode statement" b
+\State ${1:${VISUAL:...}}
+endsnippet
+
+snippet Ret "Pseudocode return" b
+\State \Return ${1:${VISUAL:...}}
+endsnippet
+
+snippet Cont "Pseudocode continue" b
+\State {\bfseries continue}
+endsnippet
+
+snippet Break "Pseudocode break" b
+\State {\bfseries break}
+endsnippet
+
+snippet gets "Pseudocode assignment" b
+\State ${1:\$x\$} \$\gets\$ ${2:${VISUAL:something}}
+endsnippet
+
+snippet If "Pseudocode if-endif" b
+\If{$1}
+	${2:${VISUAL:\\State}}
+\EndIf
+endsnippet
+
+snippet For "Pseudocode for-loop" b
+\For{\$${1:i \\gets 1 \\text\{to\} 10}\$}
+	${2:${VISUAL:\\State}}
+\EndFor
+endsnippet
+
+snippet For "Pseudocode for-all-loop" b
+\ForAll{\$${1:x \\in X}\$}
+	${2:${VISUAL:\\State}}
+\EndFor
+endsnippet
