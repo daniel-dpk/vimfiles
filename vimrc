@@ -414,8 +414,9 @@ else
 endif
 
 nnoremap <c-c> <Nop>
-nnoremap <c-g><c-s> :Gstatus<CR>
-nnoremap <c-g><c-c> :Gcommit<CR>
+nnoremap <c-g><c-s> :tab Git<CR>
+nnoremap <c-g><c-c> :Git commit<CR>
+nnoremap <c-g><c-l> :Gclog!<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>
 nnoremap <silent> <c-g><c-g> :Gitgui<CR>:redraw!<CR>
 
