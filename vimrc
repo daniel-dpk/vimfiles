@@ -206,6 +206,9 @@ if has("autocmd")
     augroup QuickFixing
         " this one is which you're most likely to use?
         autocmd QuickFixCmdPost [^l]* nested cwindow
+
+        " Use space to jump to location without leaving the Quickfix window.
+        autocmd FileType qf nnoremap <buffer> <Space> <CR><C-W>p
     augroup end
 
     " Don't use the viminfo file when editing encrypted files.
