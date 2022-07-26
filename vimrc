@@ -33,6 +33,7 @@ if !has('gui_running')
     if exists('$TMUX')
         let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
         let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+        set ttymouse=xterm2 " Fixes the mouse not working inside tmux
     else
         let &t_SI = "\e[5 q"
         let &t_EI = "\e[2 q"
@@ -95,6 +96,7 @@ set formatoptions+=r " insert comment leader when hitting <CR>
 if version >= 704
     set formatoptions+=j " remove comment characters upon joining (with 'J')
 endif
+set mouse+=a " enable (e.g.) window resizing using the mouse
 
 
 function! CustomFoldText()
