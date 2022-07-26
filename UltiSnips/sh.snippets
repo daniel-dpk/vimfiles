@@ -26,11 +26,21 @@ endsnippet
 
 
 snippet args "argument parsing (*simple*)" b
-force=0
+${1:name}=""
+${3:force}=0
 while [[ "$#" -gt 0 ]]; do
-	case "$1" in
-		-f|--force) force=1 ;;
-		*) echo "ERROR: Unknown argument: $1"; exit 1 ;;
+	case "\$1" in
+		-${2:n}|--$1)
+			shift
+			$1=\$1
+			;;
+		-${4:f}|--$3)
+			$3=1
+			;;
+		*)
+			echo "ERROR: Unknown argument: \$1"
+			exit 1
+			;;
 	esac
 	shift
 done
