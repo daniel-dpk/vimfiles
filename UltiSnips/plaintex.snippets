@@ -68,3 +68,14 @@ snippet vim "Vim mappings for compiling" b
 %   nnoremap <buffer> ,,v :update<CR>:silent !cd "%:p:h" && evince "%:t:r.pdf" &<CR>
 % }vimExec
 endsnippet
+
+
+snippet vim "Vim mappings for compiling (with biber)" b
+% vimExec{
+%  nnoremap <buffer> ,,c :update<CR>:silent !cd "%:p:h" && pdflatex -interaction=batchmode "%:t"<CR>
+%  nnoremap <buffer> ,,C :update<CR>:silent !cd "%:p:h" && gnome-terminal --maximize -- bash -c "pdflatex \"%:t\" && read -s -n 1 -p 'Press any key to continue...'"<CR>
+%  nnoremap <buffer> ,,b :update<CR>:silent !cd "%:p:h" && biber "%:t:r"<CR>
+%  nnoremap <buffer> ,,B :update<CR>:silent !cd "%:p:h" && gnome-terminal --maximize -- bash -c "biber \"%:t:r\" && read -s -n 1 -p 'Press any key to continue...'"<CR>
+%  nnoremap <buffer> ,,v :update<CR>:silent !cd "%:p:h" && evince "%:t:r.pdf" &<CR>
+% }vimExec
+endsnippet
