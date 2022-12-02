@@ -461,6 +461,14 @@ autocmd VimEnter * :call
             \                    'scope': 'FileNode', 'override': 1 })
 
 
+" Tagbar (https://github.com/preservim/tagbar) {{{1
+let g:tagbar_sort = 0
+let g:tagbar_compact = 1
+let g:tagbar_show_tag_count = 1
+nnoremap <silent> <F8> :TagbarToggle<CR>
+nnoremap <silent> <S-F8> :TagbarOpen fj<CR>
+
+
 " Localvimrc (https://github.com/embear/vim-localvimrc) {{{1
 let g:localvimrc_sandbox = 0
 let g:localvimrc_ask = 1
