@@ -765,6 +765,14 @@ def __new__(cls, *args, **kwargs):
 endsnippet
 
 
+snippet tryff "Try / Finally" b
+try:
+	${1:${VISUAL:...}}
+finally:
+	${2:...}
+endsnippet
+
+
 snippet todo "TODO-entry" b
 # TODO: ${1:`!p
 if not snip.c:
