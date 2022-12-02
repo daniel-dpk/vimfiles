@@ -103,3 +103,8 @@ box = make_box_filler(len(t[1]), match.group(1), 71)
 snip.rv = box[2] + '\n' + box[3]`
 $0
 endsnippet
+
+
+snippet timestamp "YYYYMMDD-hhmmss" w
+`!v strftime("%Y%m%d-%H%M%S")`
+endsnippet

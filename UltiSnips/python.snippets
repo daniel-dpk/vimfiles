@@ -306,6 +306,12 @@ def ${1:my_prop}(self):
 	${2:${VISUAL:pass}}
 endsnippet
 
+snippet cprop "Cached property (functools)" b
+@cached_property
+def ${1:my_prop}(self):
+	return ${2:...}
+endsnippet
+
 
 snippet ifn "if x is None: ..." b
 if ${1:x} is None:
