@@ -17,51 +17,55 @@ setlocal tw=100
 setlocal foldcolumn=0
 
 function! TSIndent(line)
-	return strlen(matchstr(a:line,'\v^\s+'))
+    return strlen(matchstr(a:line,'\v^\s+'))
 endfunction
 setlocal foldmethod=expr
 setlocal foldexpr=MyTSIndentFoldExpr()
 function! MyTSIndentFoldExpr()
-	if (getline(v:lnum)=~'^$')
-		return 0
-	endif
-	let ind = TSIndent(getline(v:lnum))
-	let indNext = TSIndent(getline(v:lnum+1))
-	return (ind<indNext) ? ('>'.(indNext)) : ind
+    if (getline(v:lnum)=~'^$')
+        return 0
+    endif
+    let ind = TSIndent(getline(v:lnum))
+    let indNext = TSIndent(getline(v:lnum+1))
+    return (ind<indNext) ? ('>'.(indNext)) : ind
 endfunction
 setlocal foldtext=MyFoldText()
 function! MyFoldText()
-	let line = getline(v:foldstart)
-	" Foldtext ignores tabstop and shows tabs as one space,
-	" so convert tabs to 'tabstop' spaces so text lines up
-	let ts = repeat(' ',&tabstop)
-	let line = substitute(line, '\t', ts, 'g')
-  let numLines = v:foldend - v:foldstart + 1
-	return line.' ['.numLines.' lines]'
+    let line = getline(v:foldstart)
+    " Foldtext ignores tabstop and shows tabs as one space,
+    " so convert tabs to 'tabstop' spaces so text lines up
+    let ts = repeat(' ',&tabstop)
+    let line = substitute(line, '\t', ts, 'g')
+    let numLines = v:foldend - v:foldstart + 1
+    return line.' ['.numLines.' lines]'
 endfunction
 
 nnoremap <buffer> <silent> <LocalLeader>x yyp_C[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>t yyp_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>s yyp_C<tab>[ ]<space>
+nnoremap <buffer> <silent> <LocalLeader>S yyp_C<tab>[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>X yyP_C[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>T yyP_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>S yyP_C<tab>[ ]<space>
 
 noremap <buffer> <silent> <A-k> :call search("^\\* \\S", 'bWs')<CR>
 noremap <buffer> <silent> <A-j> :call search("^\\* \\S", 'Ws')<CR>
 
 nnoremap <buffer> <silent> <space> za
 
-nnoremap <buffer> <silent> <LocalLeader><space> :call <SID>ToggleTodo()<CR>
-function! s:ToggleTodo()
+nnoremap <buffer> <silent> <LocalLeader><space> :call <SID>ToggleTodo("x", "done")<CR>
+nnoremap <buffer> <silent> <LocalLeader>C :call <SID>ToggleTodo("-", "cancelled")<CR>
+function! s:ToggleTodo(donechar, donestr)
     let l:line = getline('.')
     let l:char = matchstr(l:line, '\[\zs.\ze\]')
-    if l:char == 'x'
+    if l:char == a:donechar
         let l:char = ' '
+        let l:line = substitute(l:line, '@'.a:donestr.' [^@]\+', '', '')
+        let l:line = substitute(l:line, '\s*$', '', '')
     else
-        let l:char = 'x'
+        let l:char = a:donechar
+        let l:line = printf("%-120s @%s %s", l:line, a:donestr, strftime("%Y-%m-%d %H:%M"))
     endif
-    call setline(line('.'), substitute(l:line, '\[\zs.\ze]', l:char, ''))
+    let l:line = substitute(l:line, '\[\zs.\ze]', l:char, '')
+    call setline(line('.'), l:line)
 endfunction
 
 

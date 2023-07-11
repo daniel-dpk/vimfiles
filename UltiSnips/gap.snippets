@@ -1,0 +1,95 @@
+snippet fun "Function definition" b
+${1:fname} := function(${2:args})
+	${3:local ${4:a}};
+	${5:${VISUAL:...;}}
+end;;
+endsnippet
+
+
+snippet gfun "Global function definition" b
+DeclareGlobalFunction("$1");;
+InstallGlobalFunction(${1:func_name}, function(${2:args})
+	${3:local ${4:a}};
+	${5:${VISUAL:...;}}
+end);;
+endsnippet
+
+
+snippet if "if statement" b
+if ${1:cond} then
+	${2:${VISUAL:...;}}
+fi;
+endsnippet
+
+
+snippet for "for loop" b
+for ${1:item} in ${2:list} do
+	${3:${VISUAL:...;}}
+od;
+endsnippet
+
+
+snippet while "while loop" b
+while ${1:cond} do
+	${2:${VISUAL:...;}}
+od;
+endsnippet
+
+
+snippet ae "assert_equal(a, b)" b
+assert_equal(${1:${VISUAL:actual}}, ${2:expected});;
+endsnippet
+
+
+snippet p "Print()" b
+Print(${1:${VISUAL:""}}, "\n");
+endsnippet
+
+
+snippet pv "Print (value)" b
+Print("${1:${VISUAL:val}} = ", $1, "\n");
+endsnippet
+
+
+snippet err "Error()" b
+Error("${1:not yet implemented}");
+endsnippet
+
+
+snippet unittest "Naive testing boiler plate" b
+# vim:set ft=gap:
+
+Read("./src/testutils.g");;
+Read("./src/${1:`!p
+if not snip.c:
+	import string
+	snip.rv = re.sub(r'^test(m)?_', '', snip.basename)
+else:
+	snip.rv = snip.c
+`}.g");;
+
+
+tests := rec(
+
+	test_${2:name} := function()
+		assert_equal(1, 2);
+	end,
+);
+
+
+for test in RecNames(tests) do
+	if StartsWith(test, "test_") then
+		tests.(test)();
+	fi;
+od;
+
+
+Print("OK\n");
+endsnippet
+
+
+snippet test "Single test" b
+test_${1:name} := function()
+	${2:${VISUAL:assert_equal(1, 2);}}
+end,
+endsnippet

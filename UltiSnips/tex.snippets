@@ -1,3 +1,5 @@
+extends plaintex
+
 global !p
 
 
@@ -19,8 +21,18 @@ def get_from_line_above(pattern, default='', full_output=False):
 endglobal
 
 
-snippet todo "\TODO{...}" w
-\TODO{${1:Task}}
+snippet todo "\todo{...}" w
+\todo{${1:${VISUAL:Task}}}
+endsnippet
+
+
+snippet todo: "% TODO: ..." w
+% TODO: ${1:${VISUAL:Task}}
+endsnippet
+
+
+snippet up "\usepackage{...}" b
+\usepackage[$1]{${2:${VISUAL:package}}}
 endsnippet
 
 
@@ -46,31 +58,31 @@ ${4:Correct Answer}
 endsnippet
 
 
-snippet h "LU: Heading line" !b
-\begin{center}{\bf ${1:${VISUAL:Title}}}\end{center}\medskip
-endsnippet
+#snippet h "LU: Heading line" !b
+#\begin{center}{\bf ${1:${VISUAL:Title}}}\end{center}\medskip
+#endsnippet
 
-snippet f "LU: Framed formula" !b
-\begin{empheq}{align*}
-	${1:${VISUAL:formula}}
-\end{empheq}
-endsnippet
+#snippet f "LU: Framed formula" !b
+#\begin{empheq}{align*}
+#	${1:${VISUAL:formula}}
+#\end{empheq}
+#endsnippet
 
-snippet a "\begin{align*} ... \end{align*}" b
-\begin{align*}
-	${1:${VISUAL:formula}}
-\end{align*}
-endsnippet
+#snippet a "\begin{align*} ... \end{align*}" b
+#\begin{align*}
+#	${1:${VISUAL:formula}}
+#\end{align*}
+#endsnippet
 
-snippet m "\begin{multline*} ... \end{multline*}" b
-\begin{multline*}
-	${1:${VISUAL:formula}}
-\end{multline*}
-endsnippet
+#snippet m "\begin{multline*} ... \end{multline*}" b
+#\begin{multline*}
+#	${1:${VISUAL:formula}}
+#\end{multline*}
+#endsnippet
 
-snippet t "\\text{...}" !w
-\text{${1:${VISUAL:...}}}
-endsnippet
+#snippet t "\\text{...}" !w
+#\text{${1:${VISUAL:...}}}
+#endsnippet
 
 
 snippet en "enumerate block" b
@@ -81,8 +93,8 @@ endsnippet
 
 
 snippet item "itemize block" b
-\begin{itemize}${1:[noitemsep]}
-	\item ${2:${VISUAL}}
+\begin{itemize}
+	\item ${1:${VISUAL}}
 \end{itemize}
 endsnippet
 
@@ -131,52 +143,75 @@ snippet oo "\infty" w
 endsnippet
 
 
-snippet fp "figPut - Fancy figure with caption" b
-\figPut${1:[tbh]}{\includegraphics[width=${2:.4\linewidth}]{${3:image}}}{${4:${VISUAL:The caption.}}}{${5:figname}}
-endsnippet
+#snippet fp "figPut - Fancy figure with caption" b
+#\figPut${1:[tbh]}{\includegraphics[width=${2:.4\linewidth}]{${3:image}}}{${4:${VISUAL:The caption.}}}{${5:figname}}
+#endsnippet
 
 
-snippet fpr "figPutRows - Fancy multi-figure with caption" b
-\figPutRows[${1:tbp}]{%
-	\figII[~]
-		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${3:img1}}}{}%
-		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${4:img2}}}{}
-
-	\vspace*{2ex}
-	\figII[~]
-		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${5:img3}}}{}%
-		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${6:img4}}}{}%
-}{%
-	${7:The caption.}
-}{fig:${2:TODO}}
-endsnippet
+#snippet fpr "figPutRows - Fancy multi-figure with caption" b
+#\figPutRows[${1:tbp}]{%
+#	\figII[~]
+#		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${3:img1}}}{}%
+#		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${4:img2}}}{}
+#
+#	\vspace*{2ex}
+#	\figII[~]
+#		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${5:img3}}}{}%
+#		{\includegraphics[trim=0 0 0 0,clip,width=.48\textwidth]{${6:img4}}}{}%
+#}{%
+#	${7:The caption.}
+#}{fig:${2:TODO}}
+#endsnippet
 
 
 snippet fig2 "2 figures side by side (subfigure)" b
-\begin{figure}[${2:htpb}]
-	\centering
-	\subfigure[]{
-		\includegraphics[width=0.45\textwidth]{${3:img1}}
+\begin{figure}${1:[tpb]}\centering%
+	\subfigure[]{%
+		\includegraphics[width=0.45\textwidth]{${2:img1}}%
 		\label{fig:$1_a}
 	}%
-	\subfigure[]{
-		\includegraphics[width=0.45\textwidth]{${4:img2}}
+	\subfigure[]{%
+		\includegraphics[width=0.45\textwidth]{${3:img2}}%
 		\label{fig:$1_b}
 	}
-	\caption{%
-		${5:TODO}
+	\caption{\label{fig:${4:TODO}}%
+		${5:${VISUAL:...}}
 	}
-	\label{fig:${1:TODO}}
 \end{figure}
+endsnippet
+
+
+snippet fig "figure" b
+\begin{figure}
+	\includegraphics[width=0.45\linewidth]{${1:image}}%
+	\caption[]{\label{fig:${2:TODO}}%
+		${3:${VISUAL:...}}
+	}
+\end{figure}
+endsnippet
+
+
+snippet sfig "figure with side caption" b
+\begin{SCfigure}
+	\includegraphics[width=0.45\linewidth]{${1:image}}%
+	\caption[]{\label{fig:${2:TODO}}%
+		${3:${VISUAL:...}}
+	}
+\end{SCfigure}
 endsnippet
 
 
 snippet if "if... then... else..." b
 \ifthenelse{${1:\equal{${2:\foo}}{${3:bar}}}}{%
 	${4:${VISUAL:ifyes}}
-}{${5:
+}{${5:%
 	ifno
 }}
+endsnippet
+
+
+snippet ref "Reference" w
+\ref{$1}
 endsnippet
 
 
@@ -185,8 +220,14 @@ snippet sref "\secref{sec:...} -> section 4.3" w
 endsnippet
 
 
-snippet eref "\eqref{eq:...} -> (2.1)" w
-\eqref{eq:$1}$0
+#\eqref{eq:$1}$0
+snippet eref "Reference equation Eq.~(1)" w
+Eq.~\eqref{eq:$1}
+endsnippet
+
+
+snippet eqref "Reference equation (1)" w
+\eqref{eq:$1}
 endsnippet
 
 
@@ -195,13 +236,15 @@ snippet enref "\eqnref{eq:...} -> equation (2.1)" w
 endsnippet
 
 
-snippet fref "\figref{fig:...} -> figure 2.1" w
-\figref{fig:$1}$0
+#\figref{fig:$1}$0
+snippet fref "Reference figure" w
+Fig.~\ref{fig:$1}
 endsnippet
 
 
-snippet tref "\tabref{tab:...} -> table 2.1" w
-\tabref{tab:$1}$0
+#\tabref{tab:$1}$0
+snippet tref "Refernce table" w
+Tab.~\ref{tab:$1}
 endsnippet
 
 
@@ -342,7 +385,7 @@ snippet par "Paragraph head" b
 endsnippet
 
 
-snippet frame "beamer frame block" b
+snippet frame "beamer frame" b
 \begin{frame}
 	\frametitle{${1:`!p
 if not snip.c:
@@ -351,10 +394,38 @@ else:
 	snip.rv = snip.c`}}
 	${2:${VISUAL:content}}
 \end{frame}
+%\endinput % skip the remainder of this file
 endsnippet
 
+
+snippet vframe "fullscreen video frame" b
+\begin{frame}[plain]
+	\centering
+	\begin{tikzpicture}[remember picture,overlay]
+		\node[at=(current page.center)] {
+			\href{run:${1:video}.mp4}{%
+				\includegraphics[keepaspectratio,width=\paperwidth,height=\paperheight]{%
+					$1-f000000%
+				}%
+			}%
+		};
+	\end{tikzpicture}
+\end{frame}
+%\endinput % skip the remainder of this file
+endsnippet
+
+
+snippet source "source reference (TikZ)" b
+\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=0.5em,yshift=0.0em,anchor=south west] at (current page.south west) {
+		\tiny (source: ${1:authors}, ${2:ref}${3:, modified})
+	};
+\end{tikzpicture}
+endsnippet
+
+
 snippet inc "\includegraphics{...}" b
-\includegraphics{${1:imagefile}}
+\includegraphics[width=${2:0.5}\linewidth,valign=t]{${1:imagefile}}
 endsnippet
 
 
@@ -364,4 +435,146 @@ snippet bibi "beamer bibitem" b
 	$1
 	\newblock {\em ${3:title}}.
 	\newblock ${4:details}.
+endsnippet
+
+
+snippet cols "columns (beamer)" b
+\begin{columns}
+	\column{0.5\textwidth}
+		${1:${VISUAL:content}}
+	\column{0.5\textwidth}
+\end{columns}
+endsnippet
+
+
+snippet def "Definition" b
+\begin{defn}[${1:Item}]\label{def:${2:todo}}
+	${3:${VISUAL:...}}
+\end{defn}
+endsnippet
+
+snippet thm "Theorem" b
+\begin{thm}[${1:Item}]\label{thm:${2:todo}}
+	${3:${VISUAL:...}}
+\end{thm}
+endsnippet
+
+snippet rem "Remark" b
+\begin{rem}
+	${1:${VISUAL:...}}
+\end{rem}
+endsnippet
+
+
+snippet S "Surf" w
+$\Surf$
+endsnippet
+
+snippet Sout "S_outer" w
+$\Sout$
+endsnippet
+
+snippet Sin "S_inner" w
+$\Sin$
+endsnippet
+
+snippet S1 "S_{1}" w
+$\Sone$
+endsnippet
+
+snippet S2 "S_{2}" w
+$\Stwo$
+endsnippet
+
+snippet S12 "S_{1,2}" w
+$\Sonetwo$
+endsnippet
+
+snippet Hout "H_outer" w
+$\Hout$
+endsnippet
+
+snippet Hin "H_inner" w
+$\Hin$
+endsnippet
+
+snippet H1 "H_{1}" w
+$\Hone$
+endsnippet
+
+snippet H2 "H_{2}" w
+$\Htwo$
+endsnippet
+
+snippet H12 "H_{1,2}" w
+$\Honetwo$
+endsnippet
+
+snippet ttouch "T_touch" w
+$\ttouch$
+endsnippet
+
+snippet T- "$\Theta_{-}$" w
+$\Theta_{-}$
+endsnippet
+
+snippet T+ "$\Theta_{+}$" w
+$\Theta_{+}$
+endsnippet
+
+snippet T+- "$\Theta_{+-}$" w
+$\Theta_{\pm}$
+endsnippet
+
+snippet Tn "$\Theta_{(n)}$" w
+$\Theta_{(n)}$
+endsnippet
+
+snippet Tl "$\Theta_{(ell)}$" w
+$\Theta_{(\ell)}$
+endsnippet
+
+
+snippet Proc "Pseudocode procedure" b
+\Procedure{${1:Name}}{${2:args}}
+	${3:${VISUAL:\\State}}
+\EndProcedure
+endsnippet
+
+snippet St "Pseudocode statement" b
+\State ${1:${VISUAL:...}}
+endsnippet
+
+snippet Ret "Pseudocode return" b
+\State \Return ${1:${VISUAL:...}}
+endsnippet
+
+snippet Cont "Pseudocode continue" b
+\State {\bfseries continue}
+endsnippet
+
+snippet Break "Pseudocode break" b
+\State {\bfseries break}
+endsnippet
+
+snippet gets "Pseudocode assignment" b
+\State ${1:\$x\$} \$\gets\$ ${2:${VISUAL:something}}
+endsnippet
+
+snippet If "Pseudocode if-endif" b
+\If{$1}
+	${2:${VISUAL:\\State}}
+\EndIf
+endsnippet
+
+snippet For "Pseudocode for-loop" b
+\For{\$${1:i \\gets 1 \\text\{to\} 10}\$}
+	${2:${VISUAL:\\State}}
+\EndFor
+endsnippet
+
+snippet For "Pseudocode for-all-loop" b
+\ForAll{\$${1:x \\in X}\$}
+	${2:${VISUAL:\\State}}
+\EndFor
 endsnippet

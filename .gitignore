@@ -1,5 +1,6 @@
 # Ignore custom user settings
 /custom_settings.vim
+/GAPWORDS
 
 # Ignore temporary folders/files
 /sessions/

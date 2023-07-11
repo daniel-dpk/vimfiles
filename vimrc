@@ -31,6 +31,7 @@ if !has('gui_running')
     if exists('$TMUX')
         let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
         let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+        set ttymouse=xterm2 " Fixes the mouse not working inside tmux
     else
         let &t_SI = "\e[5 q"
         let &t_EI = "\e[2 q"
@@ -52,6 +53,11 @@ endif
 if !empty($NO_VIM_GUTENTAGS)
     call add(g:pathogen_disabled, 'vim-gutentags')
 endif
+call add(g:pathogen_disabled, 'syntastic')
+"call add(g:pathogen_disabled, 'ale')
+
+" This old plugin seems to make Markdown files load excessively slow
+call add(g:pathogen_disabled, 'vim-css-color')
 
 " This will actually source the scripts
 call pathogen#infect()
@@ -91,6 +97,7 @@ set formatoptions+=r " insert comment leader when hitting <CR>
 if version >= 704
     set formatoptions+=j " remove comment characters upon joining (with 'J')
 endif
+set mouse+=a " enable (e.g.) window resizing using the mouse
 
 
 function! CustomFoldText()
@@ -123,6 +130,11 @@ if &t_Co > 2 || has("gui_running")
     syntax on
     set hlsearch
 endif
+
+" Disable beep and flashing
+set noerrorbells
+set visualbell
+set t_vb=
 
 
 " Excluding files when matching
@@ -177,7 +189,7 @@ if has("autocmd")
         autocmd!
 
         " Separate colorscheme for Todo lists.
-        autocmd BufEnter Todo.txt set background=dark |
+        autocmd BufEnter Todo.\(txt\|gpg\) set background=dark |
                     \ silent! colorscheme darkblue |
                     \ silent! colorscheme oceandeep
 
@@ -197,6 +209,9 @@ if has("autocmd")
     augroup QuickFixing
         " this one is which you're most likely to use?
         autocmd QuickFixCmdPost [^l]* nested cwindow
+
+        " Use space to jump to location without leaving the Quickfix window.
+        autocmd FileType qf nnoremap <buffer> <Space> <CR><C-W>p
     augroup end
 
     " Don't use the viminfo file when editing encrypted files.
@@ -292,10 +307,9 @@ nnoremap <LocalLeader>p :cp<CR>zv
 nnoremap <LocalLeader>P :cpf<CR>zv
 
 
-" Make F4 toggle spell checking (for Vim 7 and above).
+" Make ,s toggle spell checking (for Vim 7 and above).
 if has("spell")
-    nmap <F4> <ESC>:set spell!<CR>
-    imap <F4> <ESC>:set spell!<CR>a
+    nmap <LocalLeader>s <ESC>:set spell!<CR>
 endif
 
 
@@ -309,8 +323,8 @@ nmap <silent> <A-S-k> <C-W>k
 if v:version >= 700
     map <C-Left>  <ESC>:tabprev<CR>
     map <C-Right> <ESC>:tabnext<CR>
-    map <C-S-Left>  <ESC>:tabmove -1<CR>
-    map <C-S-Right> <ESC>:tabmove +1<CR>
+    map <S-Left>  <ESC>:tabmove -1<CR>
+    map <S-Right> <ESC>:tabmove +1<CR>
     nnoremap <silent> tt :tab split<CR>
     " Close current tab leaving us on previous tab (instead of next).
     nnoremap <silent> TT :silent! tabmove -1<CR>:tabclose<CR>
@@ -358,6 +372,18 @@ nnoremap <Leader>mr ^c$<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
 vnoremap <Leader>mr c<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
 
 
+" Search across line breaks using
+"   :S Hello World
+" Credit: Bryan Ward on Stack Exchange (https://unix.stackexchange.com/a/11848)
+function! SearchMultiLine(bang, ...)
+    if a:0 > 0
+        let sep = (a:bang) ? '\_W\+' : '\_s\+'
+        let @/ = join(a:000, sep)
+    endif
+endfunction
+command! -bang -nargs=* -complete=tag S call SearchMultiLine(<bang>0, <f-args>)|normal! /<C-R>/<CR>
+
+
 "----------------------"
 "  Configure Plug-Ins  "
 "----------------------"
@@ -368,9 +394,9 @@ if version >= 704 && has("python3") || has("python")
     nnoremap <Leader>se :UltiSnipsEdit<CR>
     let g:UltiSnipsEditSplit           = "horizontal"
     let g:UltiSnipsExpandTrigger       = "<c-j>"
-    let g:UltiSnipsListSnippets        = "<c-tab>"
-    let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
-    let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+    let g:UltiSnipsListSnippets        = "<c-k>"
+    let g:UltiSnipsJumpForwardTrigger  = "<c-l>"
+    let g:UltiSnipsJumpBackwardTrigger = "<c-h>"
 endif
 
 " Put these two into ~/.vimrc or ~/vimfiles/custom_settings.vim
@@ -391,8 +417,9 @@ else
 endif
 
 nnoremap <c-c> <Nop>
-nnoremap <c-g><c-s> :Gstatus<CR>
-nnoremap <c-g><c-c> :Gcommit<CR>
+nnoremap <c-g><c-s> :tab Git<CR>
+nnoremap <c-g><c-c> :Git commit<CR>
+nnoremap <c-g><c-l> :Gclog!<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>
 nnoremap <silent> <c-g><c-g> :Gitgui<CR>:redraw!<CR>
 
@@ -425,11 +452,22 @@ else
 endif
 
 function! NERDTreeMyOpenFile(node)
-    call a:node.activate({'reuse': 'currenttab', 'where': 'p'})
+    call a:node.activate({'reuse': 'currenttab', 'where': 'p', 'keepopen':!nerdtree#closeTreeOnOpen()})
 endfunction
 autocmd VimEnter * :call
             \ NERDTreeAddKeyMap({'key': 'o', 'callback': 'NERDTreeMyOpenFile',
             \                    'scope': 'FileNode', 'override': 1 })
+autocmd VimEnter * :call
+            \ NERDTreeAddKeyMap({'key': '<CR>', 'callback': 'NERDTreeMyOpenFile',
+            \                    'scope': 'FileNode', 'override': 1 })
+
+
+" Tagbar (https://github.com/preservim/tagbar) {{{1
+let g:tagbar_sort = 0
+let g:tagbar_compact = 1
+let g:tagbar_show_tag_count = 1
+nnoremap <silent> <F8> :TagbarToggle<CR>
+nnoremap <silent> <S-F8> :TagbarOpen fj<CR>
 
 
 " Localvimrc (https://github.com/embear/vim-localvimrc) {{{1
@@ -442,6 +480,11 @@ let g:localvimrc_persistent = 1
 " Requires: https://github.com/xolox/vim-misc
 let g:session_autoload = 'no'
 let g:session_autosave = 'yes'
+
+
+" maximizer (https://github.com/szw/vim-maximizer) {{{1
+let g:maximizer_set_default_mapping = 0
+nnoremap <silent> <LocalLeader>z :MaximizerToggle!<CR>
 
 
 " vim-css-color (https://github.com/skammer/vim-css-color) {{{1
@@ -483,6 +526,8 @@ nmap <LocalLeader>a<C-S-Space> mm:Tabularize /\S\zs /l0l1<CR>`m
 vmap <LocalLeader>a<C-S-Space> mm:Tabularize /\S\zs /l0l1<CR>`m
 nmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
 vmap <LocalLeader>a&           mm:Tabularize /&<CR>`m
+nmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
+vmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
 
 
 " clang-format {{{1
@@ -496,14 +541,14 @@ endif
 
 
 " syntastic {{{1
-nnoremap <Leader>sc :SyntasticCheck<CR>
-nnoremap <Leader>sl :Errors<CR>
-nnoremap <Leader>sr :SyntasticReset<CR>
-nnoremap <Leader>st :SyntasticToggleMode<CR>
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"nnoremap <Leader>sc :SyntasticCheck<CR>
+"nnoremap <Leader>sl :Errors<CR>
+"nnoremap <Leader>sr :SyntasticReset<CR>
+"nnoremap <Leader>st :SyntasticToggleMode<CR>
+"
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -519,9 +564,48 @@ let g:syntastic_mode_map = {
     \ "passive_filetypes": [] }
 
 
+" ALE (Asynchronous Lint Engine) (https://github.com/dense-analysis/ale) {{{1
+"
+" The below configuration of ALE disables it by default. You can press '\ale'
+" (without quote marks) to activate/deactivate in normal mode. Also, it is
+" currently only active for Python and only uses 'pylint'.
+
+nnoremap <silent> <Leader>ale :ALEToggle<CR>
+
+"let g:ale_sign_column_always = 0
+let g:ale_disable_lsp = 1
+let g:ale_enabled = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters_explicit = 1
+"let g:ale_linters = {}
+let g:ale_linters = {'python': ['pylint']}
+
+function! LinterStatus() abort
+    if !g:ale_enabled | return '' | endif
+    let l:counts = ale#statusline#Count(bufnr(''))
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+    return l:counts.total == 0 ? '' : printf(
+                \   '  %dW %dE ', all_non_errors, all_errors
+                \)
+endfunction
+
+function! LinterStatusOK() abort
+    if !g:ale_enabled | return '' | endif
+    return ale#statusline#Count(bufnr('')).total == 0 ? '  OK ' : ''
+endfunction
+
+set statusline+=%{g:ale_enabled?'\ ':''}
+set statusline+=%#DiffAdd#%{LinterStatusOK()}
+set statusline+=%#warningmsg#%{LinterStatus()}
+set statusline+=%*
+
+
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
-let g:GPGUseAgent = 0
 let g:GPGUsePipes = 1
+let g:GPGPreferSign = 1
 
 
 " Load custom settings (if any) {{{1

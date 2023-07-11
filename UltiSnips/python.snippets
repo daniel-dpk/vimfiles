@@ -135,7 +135,7 @@ def get_package_path(path, max_steps=100):
 		if i == max_steps:
 			raise RuntimeError("Maximum path length traversed.")
 		parent = op.dirname(cur)
-		if op.isdir(op.join(parent, ".git")):
+		if not op.isfile(op.join(parent, "__init__.py")):
 			break
 		if parent == cur:
 			return op.basename(path)
@@ -216,13 +216,20 @@ write_init_body(args, t[2], snip)
 endsnippet
 
 
+snippet enum "enum class" b
+class ${1:MyEnum}(Enum):
+	r"""${2:Description}"""
+	${3:MEMBER1} = 1
+endsnippet
+
+
 snippet akw "*args, **kwargs" w
 *args, **kwargs
 endsnippet
 
 
 snippet testcase "pyunit testcase" b
-class Test${1:Class}(${2:unittest.TestCase}):
+class Test${1:Class}(${2:testutils.Dpk}TestCase):
 	def test_${3:name}(self):
 		${4:pass}
 endsnippet
@@ -235,21 +242,24 @@ endsnippet
 
 
 snippet ae "Assert equal" b
-self.assertEqual(${1:first}, ${2:second})
+self.assertEqual(${1:actual}, ${2:expected})
 endsnippet
 
 snippet ane "Assert not equal" b
-self.assertNotEqual(${1:first}, ${2:second})
+self.assertNotEqual(${1:actual}, ${2:expected})
 endsnippet
 
-
 snippet aae "Assert almost equal" b
-self.assertAlmostEqual(${1:first}, ${2:second})
+self.assertAlmostEqual(${1:actual}, ${2:expected})
 endsnippet
 
 snippet ar "Assert raises" b
 with self.assertRaises(${1:Runtime}Error):
 	${2:${VISUAL:pass}}
+endsnippet
+
+snippet aac "assert_allclose (numpy)" b
+np.testing.assert_allclose(${1:actual}, ${2:expected}, rtol=1e-14, atol=0)
 endsnippet
 
 
@@ -287,6 +297,25 @@ def ${1:my_prop}(self):
 @$1.setter
 def $1(self, value):
 	self.$2 = value
+endsnippet
+
+snippet aprop "Abstract property" b
+@property
+@abstractmethod
+def ${1:my_prop}(self):
+	${2:${VISUAL:pass}}
+endsnippet
+
+snippet cprop "Cached property (functools)" b
+@cached_property
+def ${1:my_prop}(self):
+	return ${2:...}
+endsnippet
+
+
+snippet ifn "if x is None: ..." b
+if ${1:x} is None:
+	${2:${VISUAL:pass}}
 endsnippet
 
 
@@ -382,6 +411,11 @@ ${7:Examples:
 endsnippet
 
 
+snippet docp "Property documentation string" b
+r"""[property] ${1:${VISUAL:Documentation}}"""
+endsnippet
+
+
 snippet pdoc "Package Documentation (@package ...)" b
 r"""@package ${1:`!p
 if not snip.c:
@@ -401,6 +435,24 @@ ${3:Detailed description.}
 	${4:...}
 \`\`\`
 """
+
+from __future__ import annotations
+
+
+__all__ = []
+endsnippet
+
+
+snippet Ex "Examples docs section" bm
+@b Examples
+
+\`\`\`
+	${1:${VISUAL:...}}
+\`\`\`
+endsnippet
+
+snippet Ret "@return docs" b
+@return ${1:${VISUAL:...}}
 endsnippet
 
 
@@ -434,6 +486,14 @@ snippet pv "Print variable in debug message >>> inside brackets <<<" b
 print(">>> ${1:variable} = %s <<<" % ((${2:$1}),))
 endsnippet
 
+snippet pf "Print an f-string" b
+print(f"$1")
+endsnippet
+
+snippet pfv "Print f-string '>>> var = {var} <<<'" b
+print(f">>> ${1:variable} = {$1} <<<")
+endsnippet
+
 snippet pvi "print_indented() variable in debug message >>> after brackets" b
 print_indented(">>> ${1:variable} = ", ${2:$1})
 endsnippet
@@ -446,7 +506,7 @@ endsnippet
 
 
 snippet raise "Raise an exception" b
-raise ${1:Runtime}Error("${2:Message}")
+raise ${1:Runtime}Error(f"${2:Message}")
 endsnippet
 
 
@@ -463,11 +523,12 @@ endsnippet
 
 snippet unittest "Unit test file template" b
 #!/usr/bin/env python3
+# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
 
 import unittest
 import sys
 
-from testutils import DpkTestCase, slowtest
+import testutils
 from .${1:`!p
 if not snip.c:
 	import string
@@ -477,13 +538,12 @@ else:
 `} import ${2:SomeClass}
 
 
-class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:DpkTestCase}):
+class Test${3:`!p snip.rv = t[1][0].upper() + t[1][1:]`}(${4:testutils.Dpk}TestCase):
 	def setUp(self):
 		pass
 	def tearDown(self):
 		pass
 
-	#@slowtest
 	def test_${5:`!p snip.rv = t[2].lower()`}(self):
 		self.assertEqual(1, 0) # ... should fail
 
@@ -495,6 +555,16 @@ def run_tests():
 
 if __name__ == '__main__':
 	unittest.main()
+endsnippet
+
+
+snippet slow "Decorator for a *slow* test" b
+@testutils.slowtest
+endsnippet
+
+
+snippet skip "Decorator to *skip* a test" b
+@unittest.skip("${1:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ WIP @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@}")
 endsnippet
 
 
@@ -648,22 +718,69 @@ else:
 endsnippet
 
 
-snippet setstate "__setstate__() with backwards compatibility" b
+snippet setstate "__setstate__() for __dict__ class" b
 def __setstate__(self, state):
 	r"""Restore this object from the given unpickled state."""
-	# compatibility with data from previous versions
 	self.${1:_new_property} = ${2:None}
-	# Restore state. This overrides the above if contained in the data.
 	self.__dict__.update(state)
 endsnippet
 
 
-snippet getstate "__getstate__()" b
+snippet getstate "__getstate__() for __dict__ class" b
 def __getstate__(self):
 	r"""Return a picklable state object."""
 	state = self.__dict__.copy()
 	#state['problematic_property'] = None
 	return state
+endsnippet
+
+
+snippet setstate "__setstate__() for __slots__ class" b
+def __setstate__(self, state):
+	r"""Restore this object from the given unpickled state."""
+	dict_data, slot_data = state
+	try:
+		dict_data, slot_data = self.edit_setstate(dict_data, slot_data)
+	except AttributeError:
+		pass
+	if dict_data and hasattr(self, "__dict__"):
+		self.__dict__ = dict_data
+	for k, v in slot_data.items():
+		setattr(self, k, v)
+endsnippet
+
+
+snippet getstate "__getstate__() for __slots__ class" b
+def __getstate__(self):
+	r"""Return a picklable state object."""
+	slots = set().union(*(
+		getattr(cls, '__slots__', ())
+		for cls in type(self).__mro__
+	))
+	try:
+		dict_data = self.__dict__.copy()
+	except AttributeError:
+		dict_data = None
+	slot_data = {s: getattr(self, s) for s in slots if hasattr(self, s)}
+	try:
+		dict_data, slot_data = self.edit_getstate(dict_data, slot_data)
+	except AttributeError:
+		pass
+	return dict_data, slot_data
+endsnippet
+
+
+snippet new "__new__() method" b
+def __new__(cls, *args, **kwargs):
+	return super().__new__(cls, *args, **kwargs)
+endsnippet
+
+
+snippet tryff "Try / Finally" b
+try:
+	${1:${VISUAL:...}}
+finally:
+	${2:...}
 endsnippet
 
 
@@ -709,6 +826,22 @@ snippet { "LaTeX \\f{ ... \\f}" w
 \f}
 endsnippet
 
+snippet eq "LaTeX tagged and labeled AMS 'align' equation" b
+\f{align}{\label{eq:${1:name}}\tag{${2:1}}
+	${3:${VISUAL}}
+\f}
+endsnippet
+
+snippet eq* "LaTeX AMS 'align*' equation" b
+\f{align*}{
+	${3:${VISUAL}}
+\f}
+endsnippet
+
+snippet eqref "Reference to an equation" w
+Eq. \f$\eqref{eq:${1}}\f$
+endsnippet
+
 snippet @code "@code...@endcode Doxygen tags" b
 @code
 $1
@@ -732,4 +865,9 @@ endsnippet
 
 snippet m "init member with value (self.a = a)" b
 self.${1:${VISUAL:m}} = ${1/^_//}
+endsnippet
+
+
+snippet pd "pylint: disable=..." b
+# pylint: disable=${1:too-few-public-methods}
 endsnippet
