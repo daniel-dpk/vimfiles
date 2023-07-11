@@ -3,9 +3,7 @@
 " License:    MIT (see LICENSE.txt)
 
 
-if has('gui_running')
-    set encoding=utf-8
-endif
+set encoding=utf-8
 scriptencoding utf-8
 
 " When started as "evim", evim.vim will already have done these settings.
@@ -29,7 +27,7 @@ if !has('gui_running')
       let c = nr2char(1+char2nr(c))
     endw
     set ttimeout
-    set ttimeoutlen=50
+    set ttimeoutlen=0
     if exists('$TMUX')
         let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
         let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
@@ -50,6 +48,9 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 let g:pathogen_disabled = []
 if version < 704 || (!has("python3") && !has("python"))
     call add(g:pathogen_disabled, 'ultisnips')
+endif
+if !empty($NO_VIM_GUTENTAGS)
+    call add(g:pathogen_disabled, 'vim-gutentags')
 endif
 
 " This will actually source the scripts
