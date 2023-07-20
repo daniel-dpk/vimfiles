@@ -435,6 +435,11 @@ ${3:Detailed description.}
 	${4:...}
 \`\`\`
 """
+
+from __future__ import annotations
+
+
+__all__ = []
 endsnippet
 
 
@@ -501,7 +506,7 @@ endsnippet
 
 
 snippet raise "Raise an exception" b
-raise ${1:Runtime}Error("${2:Message}")
+raise ${1:Runtime}Error(f"${2:Message}")
 endsnippet
 
 

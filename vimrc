@@ -3,9 +3,7 @@
 " License:    MIT (see LICENSE.txt)
 
 
-if has('gui_running')
-    set encoding=utf-8
-endif
+set encoding=utf-8
 scriptencoding utf-8
 
 " When started as "evim", evim.vim will already have done these settings.
@@ -51,6 +49,9 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 let g:pathogen_disabled = []
 if version < 704 || (!has("python3") && !has("python"))
     call add(g:pathogen_disabled, 'ultisnips')
+endif
+if !empty($NO_VIM_GUTENTAGS)
+    call add(g:pathogen_disabled, 'vim-gutentags')
 endif
 call add(g:pathogen_disabled, 'syntastic')
 "call add(g:pathogen_disabled, 'ale')
