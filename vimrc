@@ -268,6 +268,7 @@ if has('gui_running')
 else
     set background=dark
     colorscheme desert
+    colorscheme hybrid
 endif
 
 
