@@ -25,6 +25,7 @@ call TexNewMathZone("M","subequations",0)
 call TexNewMathZone("M","align",1)
 call TexNewMathZone("M","alignat",1)
 call TexNewMathZone("M","gather",1)
+call TexNewMathZone("M","multline",1)
 
 syntax region   texTodoBraces   start="\c\%(\\TODO\|\\\)\@<!{" skip="\\\\\|\\[{}]" end="}" transparent contained contains=texTodoBraces
 syntax region   texTodoBox      start="^\s*\c\\TODO{" skip="\\\\\|\\[{}]" end="}" end="%stop}" contains=texTodoBraces containedin=ALL

@@ -371,6 +371,8 @@ nnoremap <Leader>ma "=Py3Calculate(getline('.'), 0)<CR>p
 vnoremap <Leader>ma <Esc>"=Py3Calculate(<SID>get_visual_selection(1), 0)<CR>p
 nnoremap <Leader>mr ^c$<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
 vnoremap <Leader>mr c<C-R>=Py3Calculate("<C-R>"", 1)<CR><Esc>
+nnoremap <Leader>me "=Py3Calculate(getline('.'), 0)<CR>pkJi =<Esc>
+vnoremap <Leader>me <Esc>`>a =<Esc>"=Py3Calculate(<SID>get_visual_selection(1), 1)<CR>pF=a <Esc>
 
 
 " Search across line breaks using
@@ -419,6 +421,7 @@ endif
 
 nnoremap <c-c> <Nop>
 nnoremap <c-g><c-s> :tab Git<CR>
+nnoremap <c-g><c-v> :vert botright Git<CR>
 nnoremap <c-g><c-c> :Git commit<CR>
 nnoremap <c-g><c-l> :Gclog!<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>

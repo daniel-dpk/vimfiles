@@ -85,7 +85,7 @@ endsnippet
 #endsnippet
 
 
-snippet en "enumerate block" b
+snippet enum "enumerate block" b
 \begin{enumerate}
 	\item ${1:${VISUAL}}
 \end{enumerate}
@@ -127,6 +127,11 @@ endsnippet
 
 snippet Big{ "Big{ ... Big}" !w
 \Big\\{ ${1:${VISUAL}} \Big\\}
+endsnippet
+
+
+snippet lr< "< ... >" !w
+\langle ${1:${VISUAL}} \rangle
 endsnippet
 
 
@@ -215,18 +220,22 @@ snippet ref "Reference" w
 endsnippet
 
 
-snippet sref "\secref{sec:...} -> section 4.3" w
-\secref{sec:$1}$0
+snippet sref "Sec.~\ref{sec:...} -> Sec.~IV" w
+Sec.~\ref{sec:$1}$0
+endsnippet
+
+snippet ssref "Sec.~\ref{sub:...} -> Sec.~IV.A" w
+Sec.~\ref{sub:$1}$0
 endsnippet
 
 
 #\eqref{eq:$1}$0
-snippet eref "Reference equation Eq.~(1)" w
+snippet eqref "Reference equation Eq.~(1)" w
 Eq.~\eqref{eq:$1}
 endsnippet
 
 
-snippet eqref "Reference equation (1)" w
+snippet eref "Reference equation (1)" w
 \eqref{eq:$1}
 endsnippet
 
@@ -386,12 +395,11 @@ endsnippet
 
 
 snippet frame "beamer frame" b
-\begin{frame}
-	\frametitle{${1:`!p
+\begin{frame}\frametitle{${1:`!p
 if not snip.c:
 	snip.rv = get_from_line_above(r"\\(?:frametitle|subsection|section)\{(.+)\}", "title")
 else:
-	snip.rv = snip.c`}}
+	snip.rv = snip.c`}} % {{{2
 	${2:${VISUAL:content}}
 \end{frame}
 %\endinput % skip the remainder of this file
@@ -399,13 +407,13 @@ endsnippet
 
 
 snippet vframe "fullscreen video frame" b
-\begin{frame}[plain]
+\begin{frame}[plain] \def\myvideofile{videos/${1:video}} % {{{2
 	\centering
 	\begin{tikzpicture}[remember picture,overlay]
 		\node[at=(current page.center)] {
-			\href{run:${1:video}.mp4}{%
+			\href{run:\myvideofile.mp4?autostart&loop}{%
 				\includegraphics[keepaspectratio,width=\paperwidth,height=\paperheight]{%
-					$1-f000000%
+					\myvideofile-f000000%
 				}%
 			}%
 		};
@@ -415,10 +423,29 @@ snippet vframe "fullscreen video frame" b
 endsnippet
 
 
+snippet video "video" b
+\def\myvideofile{videos/${1:video}}
+\href{run:\myvideofile.mp4?autostart&loop}{%
+	\includegraphics[keepaspectratio,width=0.8\paperwidth]{%
+		\myvideofile-f000000%
+	}%
+}%
+endsnippet
+
+
 snippet source "source reference (TikZ)" b
 \begin{tikzpicture}[remember picture,overlay]
 	\node[xshift=0.5em,yshift=0.0em,anchor=south west] at (current page.south west) {
 		\tiny (source: ${1:authors}, ${2:ref}${3:, modified})
+	};
+\end{tikzpicture}
+endsnippet
+
+
+snippet tikz "TikZ picture" b
+\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=0em,yshift=0em,anchor=south west] at (current page.south west) {
+		${1:${VISUAL:...}}
 	};
 \end{tikzpicture}
 endsnippet
@@ -518,12 +545,24 @@ snippet T- "$\Theta_{-}$" w
 $\Theta_{-}$
 endsnippet
 
+snippet T-m "\Theta_{-}" w
+\Theta_{-}
+endsnippet
+
 snippet T+ "$\Theta_{+}$" w
 $\Theta_{+}$
 endsnippet
 
+snippet T+m "\Theta_{+}" w
+\Theta_{+}
+endsnippet
+
 snippet T+- "$\Theta_{+-}$" w
 $\Theta_{\pm}$
+endsnippet
+
+snippet T+-m "\Theta_{+-}" w
+\Theta_{\pm}
 endsnippet
 
 snippet Tn "$\Theta_{(n)}$" w
@@ -532,6 +571,35 @@ endsnippet
 
 snippet Tl "$\Theta_{(ell)}$" w
 $\Theta_{(\ell)}$
+endsnippet
+
+snippet 4n "4-nabla" w
+{}^{(4)}\nabla
+endsnippet
+
+
+snippet L "$\BW$" w
+$\Lambda$
+endsnippet
+
+snippet AE9 "$\AEnine$" w
+$\AEnine$
+endsnippet
+
+snippet K12 "$\Ktwelve$" w
+$\Ktwelve$
+endsnippet
+
+snippet lK12 "laminated $\Ktwelve$" w
+laminated $\Ktwelve$
+endsnippet
+
+snippet LK12 "Laminated $\Ktwelve$" w
+Laminated $\Ktwelve$
+endsnippet
+
+snippet BW "$\BW$" w
+$\BW$
 endsnippet
 
 
