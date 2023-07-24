@@ -289,6 +289,11 @@ nnoremap <silent> <LocalLeader>d "_d
 vnoremap <silent> <LocalLeader>d "_d
 
 
+" Use CTRL-Shift-L to update Vim's notion of the terminal size and redraw Vim.
+" Should fix all rendering/layout issues.
+nnoremap <silent> <C-S-L> :!echo<CR>:redraw!<CR>
+
+
 " Use "\v" to search for a regexp in the current directory.
 nnoremap <Leader>v :vimgrep // <C-r>=<SID>DPK_grepFileMatcher(1)<CR><Home><S-Right><Right><Right>
 function! s:DPK_grepFileMatcher(extended)
