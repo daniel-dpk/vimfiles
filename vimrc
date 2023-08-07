@@ -291,7 +291,11 @@ vnoremap <silent> <LocalLeader>d "_d
 
 " Use CTRL-Shift-L to update Vim's notion of the terminal size and redraw Vim.
 " Should fix all rendering/layout issues.
-nnoremap <silent> <C-S-L> :!echo<CR>:redraw!<CR>
+if has("win32")
+    nnoremap <silent> <C-S-L> :redraw!<CR>:set cmdheight=1<CR>
+else
+    nnoremap <silent> <C-S-L> :!echo<CR>:redraw!<CR>:set cmdheight=1<CR>
+endif
 
 
 " Use "\v" to search for a regexp in the current directory.
