@@ -428,7 +428,8 @@ nnoremap <c-c> <Nop>
 nnoremap <c-g><c-s> :tab Git<CR>
 nnoremap <c-g><c-v> :vert botright Git<CR>
 nnoremap <c-g><c-c> :Git commit<CR>
-nnoremap <c-g><c-l> :Gclog!<CR>
+"nnoremap <c-g><c-l> :Gclog!<CR>
+nnoremap <silent> <c-g><c-l> :vert botright Git -p log --graph --decorate --date=short --oneline --all --pretty=format:"%h %ad%d %s"<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>
 nnoremap <silent> <c-g><c-g> :Gitgui<CR>:redraw!<CR>
 

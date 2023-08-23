@@ -5,8 +5,9 @@ set cpo&vim
 
 " Customizations
 nnoremap <buffer> <silent> q :q<CR>
-nmap <buffer> <silent> <tab> =
 nmap <buffer> <silent> <space> 1p
+nmap <buffer> <silent> K k1p
+nmap <buffer> <silent> J j1p
 
 
 " Restore the previous cpo.
