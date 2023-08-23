@@ -17,7 +17,7 @@ setlocal tw=100
 setlocal foldcolumn=0
 
 function! TSIndent(line)
-    return strlen(matchstr(a:line,'\v^\s+'))
+    return strlen(matchstr(a:line,'\v^\s+')) / &shiftwidth
 endfunction
 setlocal foldmethod=expr
 setlocal foldexpr=MyTSIndentFoldExpr()
@@ -36,9 +36,14 @@ function! MyFoldText()
     " so convert tabs to 'tabstop' spaces so text lines up
     let ts = repeat(' ',&tabstop)
     let line = substitute(line, '\t', ts, 'g')
+    let line = substitute(line, '^\(\s*\)\*', '\1▶', '')
+    let line = substitute(line, '^\(\s*\)  [', '\1⋯ [', '')
     let numLines = v:foldend - v:foldstart + 1
     return line.' ['.numLines.' lines]'
 endfunction
+
+" Restore default background on folded lines since we indicate folding via symbols.
+exec 'hi Folded ' . (has("gui_running")? 'guibg=':'ctermbg=') . synIDattr(hlID('Normal'),'bg')
 
 nnoremap <buffer> <silent> <LocalLeader>x yyp_C[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>t yyp_C[ ]<space>

@@ -11,9 +11,17 @@ highlight Search guibg=#997E4C
 " (in the terminal, it is difficult to tell where the cursor is)
 highlight MatchParen cterm=NONE ctermbg=DarkBlue ctermfg=White
 
-" Folded (bg:#1c1c1c)
+" Folded (default: guibg=#1c1c1c guifg=#707880)
 "highlight Folded guibg=#232323
+"highlight Folded guibg=#262626 guifg=#4E545B
 highlight Folded guibg=#262626
+
+" This is a folded line with some empty lines {{{
+
+
+
+
+" }}}
 
 " FoldColumn (fg:NONE, bg:#1c1c1c)
 highlight FoldColumn guifg=#666666
@@ -21,6 +29,7 @@ highlight FoldColumn guifg=#666666
 " LineNr (#373b41)
 "highlight LineNr guifg=#454A51
 highlight LineNr guifg=#4E545B
+"highlight LineNr guifg=#707880
 
 " Tab line (top of screen)
 "highlight TabLine cterm=NONE ctermfg=White ctermbg=235
