@@ -466,6 +466,14 @@ if has("win32")
 endif
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+set statusline+=%{SessionLabel()}
+function! SessionLabel()
+    let l:name = xolox#session#find_current_session()
+    if !empty(l:name)
+        return " [" . l:name . "]"
+    endif
+    return ""
+endfunction
 
 
 " CtrlP (https://github.com/ctrlpvim/ctrlp.vim) {{{1
