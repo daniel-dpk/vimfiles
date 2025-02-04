@@ -28,6 +28,10 @@ noremap <buffer> <silent> <LocalLeader>t :call ft#python#ToggleTestImpl(0)<CR>
 noremap <buffer> <silent> <LocalLeader>T :call ft#python#ToggleTestImpl(1)<CR>
 
 
+" Repeat '>>>' in REPL examples in docstrings
+setlocal comments+=b:>>>
+
+
 "" Uncomment to get auto-textwidth for code vs. comments/docstrings.
 "" Test width in normal text vs. comments/docstrings.
 "let g:python_normal_text_width = 78
