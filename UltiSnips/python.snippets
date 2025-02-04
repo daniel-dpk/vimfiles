@@ -357,29 +357,6 @@ ${2:Long description.}
 """
 endsnippet
 
-snippet DOC "Numpy-Style documentation" bm
-r"""${1:${VISUAL:TODO: One-line summary.}}
-
-${2:TODO: Description.}
-
-Parameters
-----------
-${3:var1 : int}
-	${4:TODO: Description of \`var1\`.}
-
-Returns
--------
-${5:type}
-	${6:TODO: Explanation of return value of type \`\`type\`\`.}
-
-Notes
------
-${7:TODO: Some notes about the implementation (if needed).}
-
-"""
-endsnippet
-
-
 snippet gDoc "Google-Style documentation" bm
 r"""${1:${VISUAL:TODO: One-line summary.}}
 
@@ -439,11 +416,12 @@ ${3:Detailed description.}
 from __future__ import annotations
 
 
-__all__ = []
+__all__ = [
+]
 endsnippet
 
 
-snippet Ex "Examples docs section" bm
+snippet ex "Examples docs section" bm
 @b Examples
 
 \`\`\`
@@ -451,8 +429,121 @@ snippet Ex "Examples docs section" bm
 \`\`\`
 endsnippet
 
-snippet Ret "@return docs" b
+snippet ret "@return docs" b
 @return ${1:${VISUAL:...}}
+endsnippet
+
+
+snippet "^mdoc$" "Module-level docstring (NumPy style)" r
+r"""
+${1:${VISUAL:Brief description.}}
+
+${2:Long description.}
+
+Examples
+--------
+>>> ${3:from `!p
+if not snip.c:
+	snip.rv = get_package_path(path)
+else:
+	snip.rv = snip.c
+` import something}
+"""
+
+from __future__ import annotations
+
+
+__all__ = [
+]
+endsnippet
+
+snippet docnp "Function/method documentation (NumPy style)" bm
+r"""${1:${VISUAL:Brief description.}}
+
+${2:Long description.}
+
+Parameters
+----------
+${3:var1} : ${4:int}
+	${5:Describe $3.}
+
+Returns
+-------
+${6:type}
+	${7:...}
+"""
+endsnippet
+
+snippet paramnp "Parameters docs section (NumPy style)" b
+Parameters
+----------
+${1:${VISUAL:var1}} : ${2:int}
+	${3:Describe $1}
+endsnippet
+
+snippet a "Docs for an argument or attributes (NumPy style)" b
+${1:${VISUAL:var1}} : ${2:int}
+	${3:Describe $1}
+endsnippet
+
+snippet exnp "Examples docs section (NumPy style)" bm
+Examples
+--------
+>>> ${1:${VISUAL:...}}
+endsnippet
+
+snippet retnp "Return docs section (NumPy style)" b
+Returns
+-------
+${1:type}
+	${2:...}
+endsnippet
+
+snippet notesnp "Notes docs section (NumPy style)" bm
+Notes
+-----
+${1:${VISUAL:...}}
+endsnippet
+
+snippet attrsnp "Attributes docs section (NumPy style)" bm
+Attributes
+----------
+${1:${VISUAL:attr1}} : ${2:type}
+	${3:...}
+endsnippet
+
+snippet sec "Section in docs (NumPy style)" bm
+${1:Section}
+`!p snip.rv = "-" * len(t[1])`
+${2:${VISUAL:...}}
+endsnippet
+
+snippet sub "Subsection in docs (NumPy style)" bm
+${1:Section}
+`!p snip.rv = "~" * len(t[1])`
+${2:${VISUAL:...}}
+endsnippet
+
+snippet code "code block (Sphinx style)" bm
+.. code-block:: python
+
+	${1:${VISUAL:...}}
+endsnippet
+
+snippet linkc "link to a class (RST)" w
+:class:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet linkf "link to a function (RST)" w
+:func:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet linkm "link to a module (RST)" w
+:mod:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet link "external link (RST)" w
+\`${1:${VISUAL:...}} <${2:https://...}>\`_
 endsnippet
 
 
@@ -473,7 +564,7 @@ ${1:x} = self._$1
 endsnippet
 
 
-snippet /((?<=\S\s)|(?<=[\(\[\{=\,]))_/ "self._x" r
+snippet /((?<=\S\s)|(?<=[\(\[\{=\,]))_/ "_ -> self._x" r
 self._${1:x}
 endsnippet
 
@@ -517,7 +608,7 @@ endsnippet
 
 
 snippet bp "Set an IPython breakpoint" b
-from IPython.core.debugger import Tracer; Tracer()()
+import ipdb; ipdb.set_trace()
 endsnippet
 
 
@@ -688,10 +779,10 @@ class ${1:MyClass}():
 endsnippet
 
 
-snippet abc "Abstract baseclass template" b
-from abc import ABCMeta, abstractmethod
+snippet abc "Abstract baseclass template" bm
+from abc import ABC, abstractmethod
 
-class ${1:MyAbstractClass}(${2:base}, metaclass=ABCMeta):
+class ${1:MyAbstractClass}(ABC):
 	@abstractmethod
 	def ${2:_an_abstract_method}(self): pass
 endsnippet
@@ -810,39 +901,39 @@ snippet param "@param the_name Description" b
 endsnippet
 
 
-snippet $ "LaTeX \\f$ ... \\f$" w
-\f$${1:${VISUAL}}\f$
+snippet $ "LaTeX, inline (Sphinx style)" w
+:math:\`${1:${VISUAL}}\`
 endsnippet
 
-snippet [ "LaTeX \\f[ ... \\f]" w
-\f[
+snippet $$ "LaTeX, display (Sphinx style)" wm
+.. math::
+
 	${1:${VISUAL}}
-\f]
 endsnippet
 
-snippet { "LaTeX \\f{ ... \\f}" w
-\f{eqnarray*}{
+snippet ali "LaTeX align inside Sphinx-style equation" b
+\begin{align}
 	${1:${VISUAL}}
-\f}
+\end{align}
 endsnippet
 
-snippet eq "LaTeX tagged and labeled AMS 'align' equation" b
+snippet eq "LaTeX tagged and labeled AMS 'align' equation (Doxygen style)" b
 \f{align}{\label{eq:${1:name}}\tag{${2:1}}
 	${3:${VISUAL}}
 \f}
 endsnippet
 
-snippet eq* "LaTeX AMS 'align*' equation" b
+snippet eq* "LaTeX AMS 'align*' equation (Doxygen style)" b
 \f{align*}{
 	${3:${VISUAL}}
 \f}
 endsnippet
 
-snippet eqref "Reference to an equation" w
+snippet eqref "Reference to an equation (Doxygen style)" w
 Eq. \f$\eqref{eq:${1}}\f$
 endsnippet
 
-snippet @code "@code...@endcode Doxygen tags" b
+snippet @code "@code...@endcode Doxygen tags (Doxygen style)" b
 @code
 $1
 @endcode
@@ -869,5 +960,7 @@ endsnippet
 
 
 snippet pd "pylint: disable=..." b
-# pylint: disable=${1:too-few-public-methods}
+# pylint: disable=${1:${VISUAL:too-few-public-methods}}
 endsnippet
+
+# vim:set noet sts=4 sw=4 ts=4 tw=78:

@@ -289,6 +289,17 @@ snippet table "Table environment" b
 endsnippet
 
 
+snippet tab "table with booktabs rules" b
+\begin{tabular$1}{${2:c}}
+\toprule
+	${3:heading}\\\\
+\midrule
+	${4:data}\\\\
+\bottomrule
+\end{tabular$1}
+endsnippet
+
+
 #snippet b "\\begin{} ... \\end{} block" !b
 #\begin{${1:block_type}}${2:[${3:options}]}
 #${4:$VISUAL}
