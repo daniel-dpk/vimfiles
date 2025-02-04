@@ -17,25 +17,37 @@ if has("autocmd")
     filetype plugin indent on
 endif
 
-if !has('gui_running')
-    let c='a'
-    while c <= 'z'
-      exec "set <A-".c.">=\e".c
-      exec "nmap \e".c." <A-".c.">"
-      exec "set <A-".toupper(c).">=\e".toupper(c)
-      exec "nmap \e".toupper(c)." <A-".toupper(c).">"
-      let c = nr2char(1+char2nr(c))
-    endw
-    set ttimeout
-    set ttimeoutlen=0
-    if exists('$TMUX')
-        let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
-        let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
-        set ttymouse=xterm2 " Fixes the mouse not working inside tmux
-    else
-        let &t_SI = "\e[5 q"
-        let &t_EI = "\e[2 q"
+function! s:MyTerminalSetup()
+    if !has('gui_running')
+        if !has('nvim')
+            let c='a'
+            while c <= 'z'
+              exec "set <A-".c.">=\e".c
+              exec "nmap \e".c." <A-".c.">"
+              exec "set <A-".toupper(c).">=\e".toupper(c)
+              exec "nmap \e".toupper(c)." <A-".toupper(c).">"
+              let c = nr2char(1+char2nr(c))
+            endw
+        endif
+        set ttimeout
+        set ttimeoutlen=0
+        if exists('$TMUX')
+            let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
+            let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+            if !has('nvim')
+                set ttymouse=sgr
+            endif
+        else
+            let &t_SI = "\e[5 q"
+            let &t_EI = "\e[2 q"
+        endif
     endif
+endfunction
+call s:MyTerminalSetup()
+
+
+if has('nvim')
+    let g:python3_host_prog = '~/.pyenv/versions/py3nvim/bin/python'
 endif
 
 
@@ -172,10 +184,12 @@ inoremap <c-w> <c-g>u<c-w>
 
 
 " Use stronger encryption
-if version >= 744
-    set cryptmethod=blowfish2
-elseif version >= 703
-    set cryptmethod=blowfish
+if !has('nvim')
+    if version >= 744
+        set cryptmethod=blowfish2
+    elseif version >= 703
+        set cryptmethod=blowfish
+    endif
 endif
 
 
@@ -188,10 +202,13 @@ if has("autocmd")
     augroup vimrcEx
         autocmd!
 
+        " Fix gnupg resetting settings (and thus messing up mappings).
+        autocmd TermChanged * call s:MyTerminalSetup()
+
         " Separate colorscheme for Todo lists.
-        autocmd BufEnter Todo.\(txt\|gpg\) set background=dark |
-                    \ silent! colorscheme darkblue |
-                    \ silent! colorscheme oceandeep
+        "autocmd BufEnter Todo.\(txt\|gpg\) set background=dark |
+        "            \ silent! colorscheme darkblue |
+        "            \ silent! colorscheme oceandeep
 
         " For all text files set 'textwidth' to 78 characters.
         autocmd FileType text setlocal textwidth=78
@@ -215,13 +232,15 @@ if has("autocmd")
     augroup end
 
     " Don't use the viminfo file when editing encrypted files.
-    augroup SecureEm
-        autocmd!
-        autocmd BufReadPre,BufRead *
-                    \ if strlen(&key) |
-                    \   set nobk nowb vi= |
-                    \ endif
-    augroup END
+    if !has('nvim')
+        augroup SecureEm
+            autocmd!
+            autocmd BufReadPre,BufRead *
+                        \ if strlen(&key) |
+                        \   set nobk nowb vi= |
+                        \ endif
+        augroup END
+    endif
 endif
 
 
