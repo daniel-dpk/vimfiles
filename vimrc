@@ -146,6 +146,7 @@ endif
 " Disable beep and flashing
 set noerrorbells
 set visualbell
+set belloff=all
 set t_vb=
 
 
@@ -329,6 +330,9 @@ function! s:DPK_grepFileMatcher(extended)
     return l:matchStr
 endfunction
 
+" Use "\V" to search for a regexp in the current file.
+nnoremap <Leader>V :vimgrep // <C-r>=expand("%")<CR><Home><S-Right><Right><Right>
+
 " Quickly jump between matches (i.e. in the error list)
 nnoremap <LocalLeader>n :cn<CR>zv
 nnoremap <LocalLeader>N :cnf<CR>zv
@@ -476,6 +480,7 @@ let g:ctrlp_show_hidden = 1 " show dotfiles by default
 nmap <silent> <F12>   :NERDTreeToggle<CR>
 nmap <silent> <C-F12> :NERDTreeMirror<CR>
 nmap <silent> <S-F12> :NERDTreeFind<CR>
+nmap <silent> <F24> :NERDTreeFind<CR>
 let NERDTreeIgnore=['\~$','^_[[dir]]','\.py[co]$','^tags$','^dist$[[dir]]']
 let NERDTreeMinimalUI=1
 if has('gui_running')
@@ -513,6 +518,10 @@ let g:localvimrc_persistent = 1
 " Requires: https://github.com/xolox/vim-misc
 let g:session_autoload = 'no'
 let g:session_autosave = 'yes'
+
+
+" vim-markdown (https://github.com/preservim/vim-markdown) {{{1
+"let g:vim_markdown_fenced_languages = ['py=python', 'bash=sh', 'c++=cpp']
 
 
 " maximizer (https://github.com/szw/vim-maximizer) {{{1
