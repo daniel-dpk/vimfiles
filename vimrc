@@ -620,6 +620,7 @@ set statusline+=%*
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
 let g:GPGUsePipes = 1
 let g:GPGPreferSign = 1
+"let g:GPGDebugLevel = 3
 
 
 " Load custom settings (if any) {{{1
