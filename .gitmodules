@@ -73,3 +73,9 @@
 [submodule "bundle/tagbar"]
 	path = bundle/tagbar
 	url = https://github.com/preservim/tagbar.git
+[submodule "bundle/vim-markdown"]
+	path = bundle/vim-markdown
+	url = https://github.com/preservim/vim-markdown.git
+[submodule "bundle/vim-clang-format"]
+	path = bundle/vim-clang-format
+	url = https://github.com/rhysd/vim-clang-format.git
