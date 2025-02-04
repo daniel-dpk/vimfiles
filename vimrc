@@ -564,12 +564,15 @@ vmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
 
 
 " clang-format {{{1
-if has("win32")
-    map <C-K> :pyf ~/Apps/clang-format/clang-format.py<cr>
-    imap <C-K> <c-o>:pyf ~/Apps/clang-format/clang-format.py<cr>
-else
+if filereadable("/usr/share/vim/addons/syntax/clang-format.py")
     map <C-K> :py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
     imap <C-K> <c-o>:py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
+elseif executable("clang-format")
+    autocmd FileType c,cpp,objc nnoremap <C-K> I <BS><Esc>V:ClangFormat<CR>
+    autocmd FileType c,cpp,objc vnoremap <C-K> <Esc>I <BS><Esc>gv:ClangFormat<CR>
+elseif has("win32") && filereadable("~/Apps/clang-format/clang-format.py")
+    map <C-K> :pyf ~/Apps/clang-format/clang-format.py<cr>
+    imap <C-K> <c-o>:pyf ~/Apps/clang-format/clang-format.py<cr>
 endif
 
 
