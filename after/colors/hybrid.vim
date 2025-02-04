@@ -28,13 +28,13 @@ highlight FoldColumn guifg=#666666
 
 " LineNr (#373b41)
 "highlight LineNr guifg=#454A51
-highlight LineNr guifg=#4E545B
+"highlight LineNr guifg=#4E545B
 "highlight LineNr guifg=#707880
 
 " Tab line (top of screen)
-"highlight TabLine cterm=NONE ctermfg=White ctermbg=235
-"highlight TabLineFill cterm=NONE ctermfg=White ctermbg=235
-highlight TabLineSel cterm=NONE ctermfg=White ctermbg=DarkGrey
+highlight TabLine     term=NONE cterm=NONE ctermfg=White ctermbg=235      gui=NONE guifg=White guibg=#333333
+highlight TabLineFill term=NONE cterm=NONE ctermfg=White ctermbg=235      gui=NONE guifg=White guibg=#333333
+highlight TabLineSel  term=NONE cterm=NONE ctermfg=White ctermbg=DarkGray gui=NONE guifg=White guibg=#666666
 
 " String (fg:#b5bd68, bg:NONE)
 "highlight String guifg=#B6BA93 guibg=#292929
