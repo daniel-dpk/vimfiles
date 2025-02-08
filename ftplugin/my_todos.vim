@@ -43,7 +43,11 @@ function! MyFoldText()
 endfunction
 
 " Restore default background on folded lines since we indicate folding via symbols.
-exec 'hi Folded ' . (has("gui_running")? 'guibg=':'ctermbg=') . synIDattr(hlID('Normal'),'bg')
+if has("gui_running")
+    exec 'hi Folded giobg=' . synIDattr(hlID('Normal'),'bg')
+else
+    exec 'hi Folded ctermbg=NONE'
+endif
 
 nnoremap <buffer> <silent> <LocalLeader>x yyp_C[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>t yyp_C[ ]<space>

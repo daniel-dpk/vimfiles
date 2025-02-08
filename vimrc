@@ -17,25 +17,37 @@ if has("autocmd")
     filetype plugin indent on
 endif
 
-if !has('gui_running')
-    let c='a'
-    while c <= 'z'
-      exec "set <A-".c.">=\e".c
-      exec "nmap \e".c." <A-".c.">"
-      exec "set <A-".toupper(c).">=\e".toupper(c)
-      exec "nmap \e".toupper(c)." <A-".toupper(c).">"
-      let c = nr2char(1+char2nr(c))
-    endw
-    set ttimeout
-    set ttimeoutlen=0
-    if exists('$TMUX')
-        let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
-        let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
-        set ttymouse=sgr " Fixes the mouse not working inside tmux
-    else
-        let &t_SI = "\e[5 q"
-        let &t_EI = "\e[2 q"
+function! s:MyTerminalSetup()
+    if !has('gui_running')
+        if !has('nvim')
+            let c='a'
+            while c <= 'z'
+              exec "set <A-".c.">=\e".c
+              exec "nmap \e".c." <A-".c.">"
+              exec "set <A-".toupper(c).">=\e".toupper(c)
+              exec "nmap \e".toupper(c)." <A-".toupper(c).">"
+              let c = nr2char(1+char2nr(c))
+            endw
+        endif
+        set ttimeout
+        set ttimeoutlen=0
+        if exists('$TMUX')
+            let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
+            let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+            if !has('nvim')
+                set ttymouse=sgr
+            endif
+        else
+            let &t_SI = "\e[5 q"
+            let &t_EI = "\e[2 q"
+        endif
     endif
+endfunction
+call s:MyTerminalSetup()
+
+
+if has('nvim')
+    let g:python3_host_prog = '~/.pyenv/versions/py3nvim/bin/python'
 endif
 
 
@@ -134,6 +146,7 @@ endif
 " Disable beep and flashing
 set noerrorbells
 set visualbell
+set belloff=all
 set t_vb=
 
 
@@ -172,10 +185,12 @@ inoremap <c-w> <c-g>u<c-w>
 
 
 " Use stronger encryption
-if version >= 744
-    set cryptmethod=blowfish2
-elseif version >= 703
-    set cryptmethod=blowfish
+if !has('nvim')
+    if version >= 744
+        set cryptmethod=blowfish2
+    elseif version >= 703
+        set cryptmethod=blowfish
+    endif
 endif
 
 
@@ -188,10 +203,13 @@ if has("autocmd")
     augroup vimrcEx
         autocmd!
 
+        " Fix gnupg resetting settings (and thus messing up mappings).
+        autocmd TermChanged * call s:MyTerminalSetup()
+
         " Separate colorscheme for Todo lists.
-        autocmd BufEnter Todo.\(txt\|gpg\) set background=dark |
-                    \ silent! colorscheme darkblue |
-                    \ silent! colorscheme oceandeep
+        "autocmd BufEnter Todo.\(txt\|gpg\) set background=dark |
+        "            \ silent! colorscheme darkblue |
+        "            \ silent! colorscheme oceandeep
 
         " For all text files set 'textwidth' to 78 characters.
         autocmd FileType text setlocal textwidth=78
@@ -215,13 +233,15 @@ if has("autocmd")
     augroup end
 
     " Don't use the viminfo file when editing encrypted files.
-    augroup SecureEm
-        autocmd!
-        autocmd BufReadPre,BufRead *
-                    \ if strlen(&key) |
-                    \   set nobk nowb vi= |
-                    \ endif
-    augroup END
+    if !has('nvim')
+        augroup SecureEm
+            autocmd!
+            autocmd BufReadPre,BufRead *
+                        \ if strlen(&key) |
+                        \   set nobk nowb vi= |
+                        \ endif
+        augroup END
+    endif
 endif
 
 
@@ -309,6 +329,9 @@ function! s:DPK_grepFileMatcher(extended)
     endif
     return l:matchStr
 endfunction
+
+" Use "\V" to search for a regexp in the current file.
+nnoremap <Leader>V :vimgrep // <C-r>=expand("%")<CR><Home><S-Right><Right><Right>
 
 " Quickly jump between matches (i.e. in the error list)
 nnoremap <LocalLeader>n :cn<CR>zv
@@ -443,6 +466,14 @@ if has("win32")
 endif
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+set statusline+=%{SessionLabel()}
+function! SessionLabel()
+    let l:name = xolox#session#find_current_session()
+    if !empty(l:name)
+        return " [" . l:name . "]"
+    endif
+    return ""
+endfunction
 
 
 " CtrlP (https://github.com/ctrlpvim/ctrlp.vim) {{{1
@@ -457,6 +488,7 @@ let g:ctrlp_show_hidden = 1 " show dotfiles by default
 nmap <silent> <F12>   :NERDTreeToggle<CR>
 nmap <silent> <C-F12> :NERDTreeMirror<CR>
 nmap <silent> <S-F12> :NERDTreeFind<CR>
+nmap <silent> <F24> :NERDTreeFind<CR>
 let NERDTreeIgnore=['\~$','^_[[dir]]','\.py[co]$','^tags$','^dist$[[dir]]']
 let NERDTreeMinimalUI=1
 if has('gui_running')
@@ -516,6 +548,10 @@ if (!has('nvim') && !has('clipboard_working'))
 endif
 
 
+" vim-markdown (https://github.com/preservim/vim-markdown) {{{1
+"let g:vim_markdown_fenced_languages = ['py=python', 'bash=sh', 'c++=cpp']
+
+
 " maximizer (https://github.com/szw/vim-maximizer) {{{1
 let g:maximizer_set_default_mapping = 0
 nnoremap <silent> <LocalLeader>z :MaximizerToggle!<CR>
@@ -565,12 +601,15 @@ vmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
 
 
 " clang-format {{{1
-if has("win32")
-    map <C-K> :pyf ~/Apps/clang-format/clang-format.py<cr>
-    imap <C-K> <c-o>:pyf ~/Apps/clang-format/clang-format.py<cr>
-else
+if filereadable("/usr/share/vim/addons/syntax/clang-format.py")
     map <C-K> :py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
     imap <C-K> <c-o>:py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
+elseif executable("clang-format")
+    autocmd FileType c,cpp,objc nnoremap <C-K> I <BS><Esc>V:ClangFormat<CR>
+    autocmd FileType c,cpp,objc vnoremap <C-K> <Esc>I <BS><Esc>gv:ClangFormat<CR>
+elseif has("win32") && filereadable("~/Apps/clang-format/clang-format.py")
+    map <C-K> :pyf ~/Apps/clang-format/clang-format.py<cr>
+    imap <C-K> <c-o>:pyf ~/Apps/clang-format/clang-format.py<cr>
 endif
 
 
@@ -640,6 +679,7 @@ set statusline+=%*
 " vim-gnupg (https://github.com/jamessan/vim-gnupg) {{{1
 let g:GPGUsePipes = 1
 let g:GPGPreferSign = 1
+"let g:GPGDebugLevel = 3
 
 
 " Load custom settings (if any) {{{1
