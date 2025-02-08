@@ -31,7 +31,7 @@ if !has('gui_running')
     if exists('$TMUX')
         let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
         let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
-        set ttymouse=xterm2 " Fixes the mouse not working inside tmux
+        set ttymouse=sgr " Fixes the mouse not working inside tmux
     else
         let &t_SI = "\e[5 q"
         let &t_EI = "\e[2 q"
