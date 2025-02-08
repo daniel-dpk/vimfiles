@@ -516,8 +516,12 @@ print("Bases:\n  " + "\n  ".join(repr(c) for c in inspect.getmro(${1:obj}.__clas
 endsnippet
 
 
+#snippet bp "Set an IPython breakpoint" b
+#from IPython.core.debugger import Tracer; Tracer()()
+#endsnippet
+
 snippet bp "Set an IPython breakpoint" b
-from IPython.core.debugger import Tracer; Tracer()()
+import ipdb; ipdb.set_trace()
 endsnippet
 
 
