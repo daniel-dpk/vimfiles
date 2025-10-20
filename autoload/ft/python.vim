@@ -50,7 +50,7 @@ endfunction
 " Taken from: https://stackoverflow.com/a/4028423
 function! ft#python#GetPythonTextWidth()
     if !exists('g:python_normal_text_width')
-        let l:normal_text_width = 79
+        let l:normal_text_width = 78
     else
         let l:normal_text_width = g:python_normal_text_width
     endif

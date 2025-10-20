@@ -620,6 +620,11 @@ nmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
 vmap <LocalLeader>a%           mm:Tabularize /%<CR>`m
 
 
+" Table Mode {{{1
+let g:table_mode_corner = '+'
+let g:table_mode_corner_corner = '+'
+
+
 " clang-format {{{1
 if filereadable("/usr/share/vim/addons/syntax/clang-format.py")
     map <C-K> :py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
