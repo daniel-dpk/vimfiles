@@ -1,0 +1,69 @@
+snippet $ "LaTeX, inline equation" w
+:math:\`${1:${VISUAL}}\`
+endsnippet
+
+snippet $$ "LaTeX, display equation" wm
+.. math::
+
+	${1:${VISUAL}}
+endsnippet
+
+snippet ali "LaTeX align inside equation" b
+\begin{align}
+	${1:${VISUAL}}
+\end{align}
+endsnippet
+
+snippet code "code block" bm
+.. code-block:: python
+
+	${1:${VISUAL:...}}
+endsnippet
+
+
+snippet lc "link to a class (reST)" w
+:class:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet lf "link to a function (reST)" w
+:func:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet lm "link to a module (reST)" w
+:mod:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet ld "link to a document (reST)" w
+:doc:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet le "external link (reST)" w
+\`${1:${VISUAL:...}} <${2:https://...}>\`_
+endsnippet
+
+snippet l "internal link (reST)" w
+:ref:\`${1:${VISUAL:...}}${2: <${3:label-name}>}\`
+endsnippet
+
+snippet ref "Numbered reference (e.g., citation)" w
+:ref:\`[${1:1}] <`!p
+if not snip.c:
+	snip.rv = snip.basename
+else:
+	snip.rv = snip.c
+`-ref-${2:${VISUAL:...}}>\`
+endsnippet
+
+snippet label "label that can be referenced (reST)" w
+.. _${1:label}:
+endsnippet
+
+snippet img "Image (reST)" b
+.. image:: /_static/${1:img.png}
+   :alt: ${2:${VISUAL:...}}
+   :align: center
+endsnippet
+
+snippet todo "TODO item" b
+..  TODO: ${1:${VISUAL:...}}
+endsnippet

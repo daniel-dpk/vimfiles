@@ -268,7 +268,7 @@ endsnippet
 #=========================================================================#
 
 snippet future "from __future__ import stuff..." b
-from __future__ import print_function, division
+from __future__ import annotations
 endsnippet
 
 snippet rwprop "Read/Write Property" b
@@ -512,6 +512,12 @@ ${1:${VISUAL:attr1}} : ${2:type}
 	${3:...}
 endsnippet
 
+snippet Ref "References section (NumPy style)" bm
+References
+----------
+[1] ${1:${VISUAL:...}}
+endsnippet
+
 snippet sec "Section in docs (NumPy style)" bm
 ${1:Section}
 `!p snip.rv = "-" * len(t[1])`
@@ -530,20 +536,38 @@ snippet code "code block (Sphinx style)" bm
 	${1:${VISUAL:...}}
 endsnippet
 
-snippet linkc "link to a class (RST)" w
+snippet lc "link to a class (reST)" w
 :class:\`${1:${VISUAL:...}}\`
 endsnippet
 
-snippet linkf "link to a function (RST)" w
+snippet lf "link to a function (reST)" w
 :func:\`${1:${VISUAL:...}}\`
 endsnippet
 
-snippet linkm "link to a module (RST)" w
+snippet lm "link to a module (reST)" w
 :mod:\`${1:${VISUAL:...}}\`
 endsnippet
 
-snippet link "external link (RST)" w
+snippet ld "link to a document (reST)" w
+:doc:\`${1:${VISUAL:...}}\`
+endsnippet
+
+snippet le "external link (reST)" w
 \`${1:${VISUAL:...}} <${2:https://...}>\`_
+endsnippet
+
+snippet l "internal link (reST)" w
+:ref:\`${1:${VISUAL:...}}${2: <${3:label-name}>}\`
+endsnippet
+
+snippet label "label that can be referenced (reST)" w
+.. _${1:label}:
+endsnippet
+
+snippet img "Image (reST)" b
+.. image:: /_static/${1:img}.png
+   :alt: ${2:${VISUAL:...}}
+   :align: center
 endsnippet
 
 
@@ -585,6 +609,13 @@ snippet pfv "Print f-string '>>> var = {var} <<<'" b
 print(f">>> ${1:variable} = {$1} <<<")
 endsnippet
 
+snippet perr "print relative+absolute error" b
+print(f"$1 = {${1:a}}")
+print(f"$2 = {${2:b}}")
+print(f"abs = {np.absolute($1-$2)}")
+print(f"rel = {np.absolute($1-$2)/$2}")
+endsnippet
+
 snippet pvi "print_indented() variable in debug message >>> after brackets" b
 print_indented(">>> ${1:variable} = ", ${2:$1})
 endsnippet
@@ -593,6 +624,13 @@ snippet pp "Pretty Print init" b
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 pp.pprint(${1:stuff})
+endsnippet
+
+
+snippet pnp "Print with NumPy options" b
+import numpy as np
+with np.printoptions(${3:linewidth=99, precision=12, suppress=True}):
+	print(f"${1:${VISUAL:arr}} =\n{repr(${2:$1})}")
 endsnippet
 
 
@@ -656,6 +694,41 @@ endsnippet
 
 snippet skip "Decorator to *skip* a test" b
 @unittest.skip("${1:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ WIP @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@}")
+endsnippet
+
+
+snippet pytest "Pytest test file template" b
+# pylint: disable=missing-module-docstring,missing-function-docstring
+# pylint: disable=missing-class-docstring
+
+from __future__ import annotations
+
+from pytest import approx
+import numpy as np
+from numpy import array
+
+from ${1:my_module}.${2:`!p
+if not snip.c:
+	import string
+	snip.rv = re.sub(r'^test(m)?_', '', snip.basename)
+else:
+	snip.rv = snip.c
+`} import ${3:SomeClass}
+
+
+class Test${4:`!p snip.rv = t[2][0].upper() + t[2][1:]`}:
+	def test_${5:`!p snip.rv = t[3].lower()`}(self):
+		assert array([1]) == approx(array([0])) # fail to show tests work
+endsnippet
+
+
+snippet aa "assert arr == approx(y)" b
+assert ${1:${VISUAL:arr}} == approx(${2:expected})
+endsnippet
+
+
+snippet aanp "assert arr == approx(array([1, 2, 3]))" b
+assert ${1:${VISUAL:arr}} == approx(${2:array([${3:expected}])}${4:, abs=0})
 endsnippet
 
 
