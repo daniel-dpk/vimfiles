@@ -672,8 +672,14 @@ let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters_explicit = 1
-"let g:ale_linters = {}
 let g:ale_linters = {'python': ['pylint']}
+"let g:ale_linters = {}
+"let g:ale_linters = {
+"            \   'python': ['pylint'],
+"            \   'cython': ['cython'],
+"            \}
+"let g:ale_cython_cython_executable = 'cython'
+"let g:ale_cython_cython_options = '--fast-fail --cplus'
 
 function! LinterStatus() abort
     if !g:ale_enabled | return '' | endif
