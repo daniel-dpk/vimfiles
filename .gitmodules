@@ -79,3 +79,6 @@
 [submodule "bundle/vim-clang-format"]
 	path = bundle/vim-clang-format
 	url = https://github.com/rhysd/vim-clang-format.git
+[submodule "bundle/vim-test"]
+	path = bundle/vim-test
+	url = https://github.com/vim-test/vim-test.git

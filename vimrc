@@ -173,6 +173,7 @@ set sessionoptions+=unix
 set sessionoptions+=slash
 set sessionoptions+=winpos
 set sessionoptions+=resize
+set sessionoptions-=terminal
 
 
 " Which file to add custom dictionary entries to.
@@ -240,6 +241,14 @@ if has("autocmd")
                         \ if strlen(&key) |
                         \   set nobk nowb vi= |
                         \ endif
+        augroup END
+    endif
+
+    if has('nvim')
+        augroup TermCfg
+            " When opening a new terminal buffer, start in Terminal-mode so
+            " that a simple ESC closes a finished command.
+            autocmd TermOpen * startinsert
         augroup END
     endif
 endif
@@ -535,6 +544,37 @@ let g:session_autosave = 'yes'
 " maximizer (https://github.com/szw/vim-maximizer) {{{1
 let g:maximizer_set_default_mapping = 0
 nnoremap <silent> <LocalLeader>z :MaximizerToggle!<CR>
+
+
+" vim-test (https://github.com/vim-test/vim-test) {{{1
+nmap <silent> <LocalLeader>tt :wall<CR>:TestNearest<CR>
+nmap <silent> <LocalLeader>tf :wall<CR>:TestFile<CR>
+nmap <silent> <LocalLeader>ta :wall<CR>:TestSuite<CR>
+nmap <silent> <LocalLeader>TT :wall<CR>:TestSuite<CR>
+nmap <silent> <LocalLeader>tl :wall<CR>:TestLast<CR>
+nmap <silent> <LocalLeader>tg :wall<CR>:TestVisit<CR>
+
+let g:test#python#pytest#options = '-m "not slow"'
+function! TogglePytestSlow()
+    if get(g:, 'test#python#pytest#options', '') ==# '-m "not slow"'
+        let g:test#python#pytest#options = ''
+        echo "pytest: running ALL tests"
+    else
+        let g:test#python#pytest#options = '-m "not slow"'
+        echo "pytest: skipping slow tests"
+    endif
+endfunction
+nnoremap <silent> <LocalLeader>ts :call TogglePytestSlow()<CR>
+
+if has('nvim')
+    let test#strategy = "neovim_sticky"
+    tmap <C-o> <C-\><C-n>
+endif
+
+let g:test#preserve_screen = 0  " Clear screen from previous run
+let g:test#neovim_sticky#kill_previous = 1  " Try to abort previous run
+let g:test#neovim_sticky#reopen_window = 1  " Reopen terminal split if not visible
+let g:test#neovim_sticky#use_existing = 1  " Use manually opened terminal, if exists
 
 
 " vim-css-color (https://github.com/skammer/vim-css-color) {{{1
