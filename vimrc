@@ -110,6 +110,8 @@ if version >= 704
     set formatoptions+=j " remove comment characters upon joining (with 'J')
 endif
 set mouse+=a " enable (e.g.) window resizing using the mouse
+set splitright
+set splitbelow
 
 
 function! CustomFoldText()
@@ -185,6 +187,10 @@ inoremap <c-u> <c-g>u<c-u>
 inoremap <c-w> <c-g>u<c-w>
 
 
+" Clear search highlight when <Esc> in normal mode
+nnoremap <Esc> :nohlsearch<CR>
+
+
 " Use stronger encryption
 if !has('nvim')
     if version >= 744
@@ -192,6 +198,13 @@ if !has('nvim')
     elseif version >= 703
         set cryptmethod=blowfish
     endif
+endif
+
+" Some Neovim specific options
+if has('nvim')
+lua << EOF
+    vim.g.clipboard = 'osc52'
+EOF
 endif
 
 
@@ -229,8 +242,9 @@ if has("autocmd")
         " this one is which you're most likely to use?
         autocmd QuickFixCmdPost [^l]* nested cwindow
 
-        " Use space to jump to location without leaving the Quickfix window.
-        autocmd FileType qf nnoremap <buffer> <Space> <CR><C-W>p
+        " Use 'o' to jump to location without leaving the Quickfix window.
+        autocmd FileType qf nnoremap <buffer> o <CR><C-W>p
+        autocmd FileType qf nnoremap <buffer> q :q<CR>
     augroup end
 
     " Don't use the viminfo file when editing encrypted files.
@@ -305,6 +319,7 @@ endif
 "  Key Mappings  "
 "----------------"
 " Change the local leader (for filetype key mappings) to ",".
+let mapleader = " "
 let maplocalleader = ","
 
 " On German keyboards CTRL-] doesn't work, since the "]" key is CTRL-ALT-9.
@@ -314,8 +329,8 @@ map g<A-S-I> g<C-]>
 
 
 " Delete without replacing yanked text (can be combined with motions, etc.).
-nnoremap <silent> <LocalLeader>d "_d
-vnoremap <silent> <LocalLeader>d "_d
+nnoremap <silent> <Leader>d "_d
+vnoremap <silent> <Leader>d "_d
 
 
 " Use CTRL-Shift-L to update Vim's notion of the terminal size and redraw Vim.
@@ -325,6 +340,10 @@ if has("win32")
 else
     nnoremap <silent> <C-S-L> :!echo<CR>:redraw!<CR>:set cmdheight=1<CR>
 endif
+
+
+nnoremap <LocalLeader>c :let @+=substitute(getline("."), "^[ \t]*", "", "")<CR>
+xnoremap <LocalLeader>c "+y
 
 
 " Use "\v" to search for a regexp in the current directory.
@@ -343,10 +362,10 @@ endfunction
 nnoremap <Leader>V :vimgrep // <C-r>=expand("%")<CR><Home><S-Right><Right><Right>
 
 " Quickly jump between matches (i.e. in the error list)
-nnoremap <LocalLeader>n :cn<CR>zv
-nnoremap <LocalLeader>N :cnf<CR>zv
-nnoremap <LocalLeader>p :cp<CR>zv
-nnoremap <LocalLeader>P :cpf<CR>zv
+nnoremap <C-S-j> :cnext<CR>
+nnoremap <C-S-k> :cprev<CR>
+nnoremap <A-S-j> :lnext<CR>
+nnoremap <A-S-k> :lprev<CR>
 
 
 " Make ,s toggle spell checking (for Vim 7 and above).
@@ -356,10 +375,10 @@ endif
 
 
 " Mappings for split windows.
-nmap <silent> <A-S-h> <C-W>h
-nmap <silent> <A-S-l> <C-W>l
-nmap <silent> <A-S-j> <C-W>j
-nmap <silent> <A-S-k> <C-W>k
+nmap <silent> <C-h> <C-W>h
+nmap <silent> <C-l> <C-W>l
+nmap <silent> <C-j> <C-W>j
+nmap <silent> <C-k> <C-W>k
 
 " For Vim 7, we'll move between tabs using CTRL-Arrows.
 if v:version >= 700
@@ -461,13 +480,14 @@ else
 endif
 
 nnoremap <c-c> <Nop>
-nnoremap <c-g><c-s> :tab Git<CR>
+"nnoremap <c-g><c-s> :tab Git<CR>
 nnoremap <c-g><c-v> :vert botright Git<CR>
 nnoremap <c-g><c-c> :Git commit<CR>
 "nnoremap <c-g><c-l> :Gclog!<CR>
 nnoremap <silent> <c-g><c-l> :vert botright Git -p log --graph --decorate --date=short --oneline --all --pretty=format:"%h %ad%d %s"<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>
-nnoremap <silent> <c-g><c-g> :Gitgui<CR>:redraw!<CR>
+nnoremap <silent> <c-g><c-g> :vert botright Git<CR>
+nnoremap <silent> <C-g><C-S-g> :Gitgui<CR>:redraw!<CR>
 
 nnoremap <c-g><c-t> :Gitterminal<CR>
 if has("win32")
@@ -497,6 +517,7 @@ let g:ctrlp_show_hidden = 1 " show dotfiles by default
 nmap <silent> <F12>   :NERDTreeToggle<CR>
 nmap <silent> <C-F12> :NERDTreeMirror<CR>
 nmap <silent> <S-F12> :NERDTreeFind<CR>
+nmap <silent> \ :NERDTreeFind<CR>
 nmap <silent> <F24> :NERDTreeFind<CR>
 let NERDTreeIgnore=['\~$','^_[[dir]]','\.py[co]$','^tags$','^dist$[[dir]]']
 let NERDTreeMinimalUI=1

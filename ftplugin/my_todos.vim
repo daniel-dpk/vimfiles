@@ -58,7 +58,7 @@ nnoremap <buffer> <silent> <LocalLeader>T yyP_C[ ]<space>
 noremap <buffer> <silent> <A-k> :call search("^\\* \\S", 'bWs')<CR>
 noremap <buffer> <silent> <A-j> :call search("^\\* \\S", 'Ws')<CR>
 
-nnoremap <buffer> <silent> <space> za
+nnoremap <buffer> <silent> <S-space> za
 
 nnoremap <buffer> <silent> <LocalLeader><space> :call <SID>ToggleTodo("x", "done")<CR>
 nnoremap <buffer> <silent> <LocalLeader>C :call <SID>ToggleTodo("-", "cancelled")<CR>
