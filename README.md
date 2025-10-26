@@ -30,10 +30,10 @@ for me:
 * Relying on automatic `tags` updating so that `Alt-Shift-i` in combination
   with `Ctrl-o` and `Ctrl-i` can be used to quickly jump to different places
   in the code.
-* Using `\v` (a backslash followed by `v`) to quickly grep for any expression
+* Using ` v` (a space followed by `v`) to quickly grep for any expression
   throughout the whole source. This opens a small window with a quickfix list
-  showing all matches. The matches can quickly be jumped through using `,n`
-  and `,p`.
+  showing all matches. The matches can quickly be jumped through using
+  `Ctrl+Shift+j` and `Ctrl+Shift+k`.
 * For all of the above to work seamlessly, the `hidden` option is extremely
   helpful to not interrupt the jumping when files have been changed.
   Frequently use `:wa` to make sure everything is saved, though.
