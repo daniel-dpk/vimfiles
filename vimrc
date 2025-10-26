@@ -668,14 +668,10 @@ let g:table_mode_corner_corner = '+'
 
 " clang-format {{{1
 if filereadable("/usr/share/vim/addons/syntax/clang-format.py")
-    map <C-K> :py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
-    imap <C-K> <c-o>:py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
+    map <LocalLeader>f :py3f /usr/share/vim/addons/syntax/clang-format.py<cr>
 elseif executable("clang-format")
-    autocmd FileType c,cpp,objc nnoremap <C-K> I <BS><Esc>V:ClangFormat<CR>
-    autocmd FileType c,cpp,objc vnoremap <C-K> <Esc>I <BS><Esc>gv:ClangFormat<CR>
-elseif has("win32") && filereadable("~/Apps/clang-format/clang-format.py")
-    map <C-K> :pyf ~/Apps/clang-format/clang-format.py<cr>
-    imap <C-K> <c-o>:pyf ~/Apps/clang-format/clang-format.py<cr>
+    autocmd FileType c,cpp,objc nnoremap <LocalLeader>f I <BS><Esc>V:ClangFormat<CR>
+    autocmd FileType c,cpp,objc xnoremap <LocalLeader>f <Esc>I <BS><Esc>gv:ClangFormat<CR>
 endif
 
 
