@@ -188,7 +188,9 @@ inoremap <c-w> <c-g>u<c-w>
 
 
 " Clear search highlight when <Esc> in normal mode
-nnoremap <Esc> :nohlsearch<CR>
+if has('nvim')
+    nnoremap <Esc> :nohlsearch<CR>
+endif
 
 
 " Use stronger encryption
