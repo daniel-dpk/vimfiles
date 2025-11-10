@@ -50,15 +50,13 @@ else
 endif
 
 nnoremap <buffer> <silent> <LocalLeader>x yyp_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>t yyp_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>S yyp_C<tab>[ ]<space>
 nnoremap <buffer> <silent> <LocalLeader>X yyP_C[ ]<space>
-nnoremap <buffer> <silent> <LocalLeader>T yyP_C[ ]<space>
+nnoremap <buffer> <silent> <LocalLeader>S yyp_C<tab>[ ]<space>
 
 noremap <buffer> <silent> <A-k> :call search("^\\* \\S", 'bWs')<CR>
 noremap <buffer> <silent> <A-j> :call search("^\\* \\S", 'Ws')<CR>
 
-nnoremap <buffer> <silent> <S-space> za
+nnoremap <buffer> <silent> <tab> za
 
 nnoremap <buffer> <silent> <LocalLeader><space> :call <SID>ToggleTodo("x", "done")<CR>
 nnoremap <buffer> <silent> <LocalLeader>C :call <SID>ToggleTodo("-", "cancelled")<CR>
