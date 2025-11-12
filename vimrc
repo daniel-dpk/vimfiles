@@ -489,7 +489,7 @@ nnoremap <c-g><c-c> :Git commit<CR>
 nnoremap <silent> <c-g><c-l> :vert botright Git -p log --graph --decorate --date=short --oneline --all --pretty=format:"%h %ad%d %s"<CR>
 nnoremap <silent> <c-g><c-k> :Gitk<CR>:redraw!<CR>
 nnoremap <silent> <c-g><c-g> :vert botright Git<CR>
-nnoremap <silent> <C-g><C-S-g> :Gitgui<CR>:redraw!<CR>
+nnoremap <silent> <c-g><c-u> :Gitgui<CR>:redraw!<CR>
 
 nnoremap <c-g><c-t> :Gitterminal<CR>
 if has("win32")
